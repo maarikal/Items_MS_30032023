@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import usersRoutes from "./routes/usersRoutes";
 import itemsRoutes from "./routes/itemsRoutes";
 import cors from 'cors';
+import sessionsRoute from "./routes/sessionsRoute";
 
 dotenv.config();
 const port: Number = Number(process.env.PORT) || 3000;
@@ -27,6 +28,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // Routes
 app.use('/users', usersRoutes);
 app.use('/items', itemsRoutes);
+app.use('/sessions', sessionsRoute);
 
 // Health check
 app.get('/health-check', (req, res) => {

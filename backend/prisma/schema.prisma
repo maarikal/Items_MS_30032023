@@ -22,3 +22,9 @@ model Item {
   description   String?
   image         String?
 }
+
+model Session {
+  id       String     @id
+  userId   Int @unique
+}
+
