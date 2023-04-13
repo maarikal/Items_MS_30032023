@@ -8,6 +8,7 @@ export default {
     return {
       signInEmail: '',
       signInPassword: '',
+      sessionId: '',
     }
   },
   methods: {
@@ -19,30 +20,31 @@ export default {
         password: this.signInPassword
       }).then(response => {
         // Save to localStorage (4a)
-        const sessionId = JSON.stringify(response.sessionId)
+        const sessionId = response.body.sessionId
         localStorage.setItem('sessionId', sessionId)
+        console.log('signIn.vue', sessionId)
 
         // Redirect to list of items page
         this.$router.push('/items')
       })
     },
-    checkEmail() {
+    /*    checkEmail() {
 
-      // If the email is empty, don't send a request
-      if (!this.signInEmail) {
-        this.emailCheckResult = ''
-        return
-      }
+          // If the email is empty, don't send a request
+          if (!this.signInEmail) {
+            this.emailCheckResult = ''
+            return
+          }*/
 
-      // Send a POST /sessions/check-email request to the backend
-      $http.post('/sessions/check-email', {
-        email: this.signInEmail
-      }, {disableErrorHandling: true}).then(response => {
-        this.emailCheckResult = '';
-      }).catch(response => {
-        this.emailCheckResult = response.body.error;
-      })
-    }
+    // Send a POST /sessions/check-email request to the backend
+    /*      $http.post('/sessions/check-email', {
+            email: this.signInEmail
+          }, {disableErrorHandling: true}).then(response => {
+            this.emailCheckResult = '';
+          }).catch(response => {
+            this.emailCheckResult = response.body.error;
+          })
+        } */
   }
 }
 </script>
@@ -57,8 +59,8 @@ export default {
         <span class="label-text">Email</span>
       </label>
       <input type="text" name="email" placeholder="Type here" class="input input-bordered w-full max-w-xs"
-             v-on:keyup="checkEmail"
              v-model="signInEmail"/>
+      <!--             v-on:keyup="checkEmail"-->
       <label class="label">
       </label>
     </div>

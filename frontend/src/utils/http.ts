@@ -12,6 +12,14 @@ export class $http {
             xhr.open(method, `${BASE_URL}${url}`);
             xhr.setRequestHeader('Content-Type', 'application/json')
 
+            // add Authorization header
+            const sessionId = localStorage.getItem('sessionId') || '';
+            if (sessionId) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + sessionId);
+                console.log(sessionId)
+            }
+
+
             xhr.onload = () => {
                 let parsedResponse: any
 
@@ -56,7 +64,9 @@ export class $http {
                     statusText: xhr.statusText
                 });
             };
-            xhr.send(JSON.stringify(data));
+            // send the request with or without data, depending on whether it's null
+            xhr.send(data !== null ? JSON.stringify(data) : undefined);
+
         });
 
     }
@@ -68,6 +78,9 @@ export class $http {
     static get(url: string, config = {}) {
         return this.request('GET', url, null, config);
     }
+
+    static delete(url: string) {
+        return this.request('DELETE', url, null, null);
+    }
+
 }
-
-
