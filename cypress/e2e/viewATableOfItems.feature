@@ -1,18 +1,12 @@
 Feature: View a Table of Items
-  As a user,
+  As a logged in user,
   I want to be able to view a table of items
 
   Scenario: User views a table of items
-    Given I am a user
+    Given that I am a logged in user
     When I visit the table of items page
     Then I should see a table of items
 
-  Scenario: Backend retrieves item information
-    Given I am a user
-    When I view an item page
-    Then the backend should retrieve the item information from the database
-    And return the information as JSON data
-
   Scenario: Frontend displays item information
-    Given I am a user
+    Given that I am a logged in user
     Then the frontend should display the item information on the page

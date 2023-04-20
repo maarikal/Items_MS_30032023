@@ -84,8 +84,8 @@ export default {
     </div>
     <div class="h-30">&nbsp;</div>
     <!--    // Check if query is present and show the Modify button else show the Save button-->
-    <button class="btn btn-primary" v-if="$route.query.id" @click="updateItem">Save</button>
-    <button class="btn btn-primary" v-else @click="addItem">Save</button>
+    <button id="update-item" class="btn btn-primary" v-if="$route.query.id" @click="updateItem">Save</button>
+    <button id="add-item" class="btn btn-primary" v-else @click="addItem">Save</button>
   </div>
 
 </template>

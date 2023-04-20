@@ -36,7 +36,7 @@
           </button>
         </td>
         <td>
-          <button class="btn btn-primary" @click="deleteItem(item.id)">
+          <button id="delete-item" class="btn btn-primary" @click="deleteItem(item.id)">
             Delete
           </button>
         </td>
