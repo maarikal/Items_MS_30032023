@@ -1,14 +1,15 @@
 import {Given, When, Then} from "@badeball/cypress-cucumber-preprocessor";
 
 Given("I am logged in as a registered user", () => {
-    // perform the necessary actions to log in the user
+    localStorage.setItem('sessionId', 'bogusSessionIdForTesting');
 });
 
-Given("I am on the {string} page", () => {
-    cy.visit('http://127.0.0.1:5173/items');
+When('I am on the "Items" page', () => {
+    cy.visit('http://localhost:5173/items');
 });
 
 When("I click on the {string} button next to the item I want to update", (buttonText: string) => {
+    cy.visit('http://localhost:5173/items');
     cy.contains(buttonText).click();
 });
 
