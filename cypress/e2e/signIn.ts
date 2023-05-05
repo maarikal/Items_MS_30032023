@@ -1,4 +1,5 @@
 import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
+
 const And = Given;
 
 Given('the user is on the website', () => {
@@ -10,8 +11,8 @@ When('the user clicks on the "Sign In" button', () => {
 });
 
 And('the user enters their login credentials {string}, {string}', (email: string, password: string) => {
-        cy.get("input[name=email]").type(email);
-        cy.get("input[name=password]").type(password);
+    cy.get("input[name=email]").type(email);
+    cy.get("input[name=password]").type(password);
 });
 
 And('clicks the "Sign In" button with id sign-in', () => {
@@ -43,4 +44,3 @@ And('user cannot see Sign in and Sign out links', () => {
     cy.get('#sign-in-link').should('not.exist');
     cy.get('#sign-out-link').should('not.exist');
 });
-

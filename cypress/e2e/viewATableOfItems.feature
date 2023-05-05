@@ -10,3 +10,7 @@ Feature: View a Table of Items
   Scenario: Frontend displays item information
     Given that I am a logged in user
     Then the frontend should display the item information on the page
+
+  Scenario: User cannot view a table of items
+    Given that I am not a logged in user
+    Then I should not see a table of items

@@ -31,7 +31,8 @@
           </div>
         </td>
         <td>
-          <button class="btn btn-primary" @click="getRefilledForm(item.id, item.name, item.description, item.image)">
+          <button class="btn btn-primary" @click="getRefilledForm(item.id, item.name, item.description, item.image)"
+                  id="edit">
             Edit
           </button>
         </td>

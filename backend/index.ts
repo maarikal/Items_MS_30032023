@@ -7,11 +7,15 @@ import usersRoutes from "./routes/usersRoutes";
 import itemsRoutes from "./routes/itemsRoutes";
 import cors from 'cors';
 import sessionsRoute from "./routes/sessionsRoute";
+import bodyParser from "body-parser";
+import bodyParserXml from "body-parser-xml";
 
 dotenv.config();
 const port: number = Number(process.env.PORT) || 3000;
 const app: Express = express();
 const swaggerDocument: Object = YAML.load('./swagger.yaml');
+
+bodyParserXml(bodyParser); // register xml parser
 
 app.use(cors());
 
@@ -40,7 +44,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Middleware
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true})); // use url-encoded middleware
+app.use(bodyParser.xml());
 app.use(express.static('public'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
