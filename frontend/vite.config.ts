@@ -8,6 +8,7 @@ export default defineConfig({
     proxy: {
       '/': {
         target: 'https://localhost:3000',
+        secure: true,
         changeOrigin: true,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',

@@ -6,7 +6,7 @@ import router from './router'
 createApp(App).use(router).mount('#app')
 
 // Add webSocket support
-let ws = new WebSocket("ws://localhost:3000");
+let ws = new WebSocket("wss://localhost:3000");
 ws.onopen = function () {
     console.log("Client connected!");
     ws.send("Hi, this is a client!");
