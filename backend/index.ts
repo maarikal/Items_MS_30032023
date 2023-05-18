@@ -9,11 +9,29 @@ import cors from 'cors';
 import sessionsRoute from "./routes/sessionsRoute";
 
 dotenv.config();
-const port: Number = Number(process.env.PORT) || 3000;
+const port: number = Number(process.env.PORT) || 3000;
 const app: Express = express();
 const swaggerDocument: Object = YAML.load('./swagger.yaml');
 
 app.use(cors());
+
+// Add https support
+import https from 'https';
+import fs from 'fs';
+const options = {
+    key: fs.readFileSync('../key.pem'),
+    cert: fs.readFileSync('../cert.pem')
+};
+
+try {
+    https.createServer(options, app).listen(port, () => {
+        console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
+    });
+}
+catch (err) {
+    console.error(err);
+}
+
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -36,6 +54,3 @@ app.use('/sessions', sessionsRoute);
 app.get('/health-check', (req, res) => {
     res.status(200).send('OK');
 });
-
-// Start the server
-app.listen(port, () => console.log(`Running at http://localhost:${port} and docs at http://localhost:${port}/docs`));

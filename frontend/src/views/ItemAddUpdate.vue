@@ -50,7 +50,7 @@ export default {
 
 <template>
   <div>
-    <h1>Modify Item</h1>
+    <h1>{{ $route.query.id ? 'Modify' : 'Add' }} Item</h1>
     <div class="h-30">&nbsp;</div>
     <!-- Name -->
     <div class="form-control w-full max-w-xs">
