@@ -15,7 +15,6 @@ const swaggerDocument: Object = YAML.load('./swagger.yaml');
 
 app.use(cors());
 
-/*
 // Add https support
 import https from 'https';
 import fs from 'fs';
@@ -31,7 +30,7 @@ try {
 }
 catch (err) {
     console.error(err);
-}*/
+}
 
 
 // Add websocket support
