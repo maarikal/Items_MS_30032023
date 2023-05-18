@@ -1,5 +1,4 @@
 import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
-
 const And = Given;
 
 Given('the user is on the website', () => {
