@@ -7,7 +7,7 @@ Given('that I am a logged in user', () => {
 });
 
 When('I navigate to the "Add Item" page', () => {
-    cy.visit('http://127.0.0.1:5173/modify');
+    cy.visit('https://127.0.0.1:5173/modify');
 });
 
 When('I fill in the item details', () => {
@@ -23,6 +23,6 @@ When('I submit the item form', () => {
 });
 
 Then('the new item should be visible on the "Items" page', () => {
-    cy.visit('http://127.0.0.1:5173/items');
+    cy.visit('https://127.0.0.1:5173/items');
     cy.contains(itemName).should('exist');
 });

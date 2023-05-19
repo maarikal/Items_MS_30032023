@@ -5,11 +5,11 @@ Given("I am logged in as a registered user", () => {
 });
 
 When('I am on the "Items" page', () => {
-    cy.visit('http://localhost:5173/items');
+    cy.visit('https://localhost:5173/items');
 });
 
 When("I click on the {string} button next to the item I want to update", (buttonText: string) => {
-    cy.visit('http://localhost:5173/items');
+    cy.visit('https://localhost:5173/items');
     cy.contains(buttonText).click();
 });
 

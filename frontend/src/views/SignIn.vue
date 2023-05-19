@@ -2,8 +2,9 @@
 <script>
 import {$http} from '../utils/http'
 
-
 export default {
+  // If the listener is intended to be a component custom event listener only, declare it using the "emits" option.
+  emits: ['loggedInChange'], // Declare the emitted event
   data() {
     return {
       signInEmail: '',
@@ -23,6 +24,12 @@ export default {
         const sessionId = response.body.sessionId
         localStorage.setItem('sessionId', sessionId)
         console.log('signIn.vue', sessionId)
+
+        // Share loggedIn state with parent component
+        // Set the loggedIn property to true
+        this.loggedIn = true
+        // Emit the 'loggedInChange' event to notify the parent component
+        this.$emit('loggedInChange', this.loggedIn)
 
         // Redirect to list of items page
         this.$router.push('/items')

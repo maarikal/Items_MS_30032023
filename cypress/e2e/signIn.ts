@@ -2,7 +2,7 @@ import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
 const And = Given;
 
 Given('the user is on the website', () => {
-    cy.visit('http://localhost:5173/');
+    cy.visit('https://localhost:5173/');
 });
 
 When('the user clicks on the "Sign In" button', () => {
@@ -19,7 +19,7 @@ And('clicks the "Sign In" button with id sign-in', () => {
 });
 
 And('the user is redirected to the website\'s items page', () => {
-    cy.visit('http://localhost:5173/items');
+    cy.visit('https://localhost:5173/items');
 });
 
 And("the user refreshes the page", () => {

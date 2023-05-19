@@ -5,7 +5,7 @@ Given("that I am a logged in user", () => {
 });
 
 When("I visit the table of items page", () => {
-    cy.visit("http://localhost:5173/items");
+    cy.visit("https://localhost:5173/items");
 });
 
 Then("I should see a table of items", () => {
@@ -13,7 +13,7 @@ Then("I should see a table of items", () => {
 });
 
 Then("the frontend should display the item information on the page", () => {
-    cy.visit("http://localhost:5173/items");
+    cy.visit("https://localhost:5173/items");
 
     // Ensure that the item information is displayed correctly on the page
     cy.get("table").should("exist");

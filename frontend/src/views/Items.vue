@@ -1,7 +1,6 @@
 <template>
-  <button class="btn btn-primary" v-if="sessionId" @click="signOut" data-test=sign-out id="sign-out-button">Sign Out</button>
   <br>
-  <h2>Here are our list of items: </h2>
+  <h2>Here is our list of items: </h2>
   <button class="btn btn-primary" @click="addItemButton">Add Item</button>
   <br>
   <div class="overflow-x-auto">
@@ -50,6 +49,7 @@
 
 <script>
 import {$http} from "../utils/http";
+
 // get sessionId from localStorage (4c)
 const sessionId = localStorage.getItem('sessionId')
 console.log('Items.vue', sessionId)
@@ -63,24 +63,34 @@ export default {
       description: '',
       image: '',
       sessionId: sessionId,
+      /*loggedIn: sessionId ? true : false,*/
     }
   },
   created() {
     $http.get('/items').then(response => {
       this.items = response.body
     })
+    this.checkLoggedIn()
+    console.log('Items.vue, loggedIn: ', this.loggedIn)
   },
-  // add signOut method
   methods: {
-    signOut() {
-      // Send a DELETE /sessions request to the backend
-      $http.delete('/sessions').then(response => {
-        // Remove the sessionId from localStorage (4b)
-        localStorage.removeItem('sessionId')
+    // Add checkLoggedIn method
+    checkLoggedIn() {
+      const sessionId = localStorage.getItem('sessionId')
+      if (sessionId) {
+        // Check with server to validate session
+        // If valid, set loggedIn to true
+        this.loggedIn = true
+      } else {
+        // If not signed in, alert (HTTP) 401 Unauthorized
+        alert('You are not signed in (HTTP) 401 Unauthorized')
 
-        // Redirect to the intro page
+        // If not signed in, redirect to intro page
         this.$router.push('/')
-      })
+        this.loggedIn = false
+      }
+      console.log('LoggedIn: ', this.loggedIn)
+      return this.loggedIn
     },
     // Add addItem method
     addItemButton() {
@@ -99,8 +109,10 @@ export default {
       if (confirm('Are you sure you want to delete this item?')) {
         // Send a DELETE /items request to the backend
         $http.delete(`/items?id=${id}`).then(response => {
-          // Redirect to list of items page
-          this.$router.push('/items')
+          // Refresh the list of items
+          $http.get('/items').then(response => {
+            this.items = response.body
+          })
         })
       }
     }
