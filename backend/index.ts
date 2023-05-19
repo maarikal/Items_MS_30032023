@@ -37,6 +37,21 @@ catch (err) {
 }
 
 
+// Add websocket support
+import {WebSocketServer} from "ws";
+const wss = new WebSocketServer({ port });
+
+wss.on("connection", (ws) => {
+    ws.on("message", (data) => {
+        console.log(`Received message from client => ${data}`);
+        ws.send(`Hello, you sent => ${data}`);
+    });
+    ws.send("Hi there, I am a WebSocket server");
+}
+);
+
+console.log(`WebSocket server is listening at ws://localhost:${port}`);
+
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
@@ -60,3 +75,6 @@ app.use('/sessions', sessionsRoute);
 app.get('/health-check', (req, res) => {
     res.status(200).send('OK');
 });
+
+// Start the server
+//app.listen(port, () => console.log(`Running at http://localhost:${port} and docs at http://localhost:${port}/docs`));
