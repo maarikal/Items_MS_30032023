@@ -27,30 +27,39 @@ const options = {
     cert: fs.readFileSync('../cert.pem')
 };
 
-try {
-    https.createServer(options, app).listen(port, () => {
-        console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
+const httpsServer = https.createServer(options, app).listen(port, () => {
+    console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
+});
+
+// Add websocket server using npm express-ws
+const expressWs = require('express-ws')(app, httpsServer);
+
+// Get the /ws websocket route
+// @ts-ignore
+app.ws('/ws', async function(ws, req) {
+    ws.on('message', async function(msg: any) {
+        console.log(msg);
+        // Send a received message to all connected clients
+        ws.send(msg);
+
+        ws.send(JSON.stringify({ "message" : "hello" }));
+        // Start listening for messages
+        // send message to all clients
+        // @ts-ignore
+        expressWs.getWss().clients
+            .forEach((client: any) => client
+                .send(JSON.stringify({type: msg.type, data: msg.data}))
+            );
     });
-}
-catch (err) {
-    console.error(err);
-}
-
-
-// Add websocket support
-import {WebSocketServer} from "ws";
-const wss = new WebSocketServer({ port });
-
-wss.on("connection", (ws) => {
-    ws.on("message", (data) => {
-        console.log(`Received message from client => ${data}`);
-        ws.send(`Hello, you sent => ${data}`);
+    // ws on close
+    ws.on('close', function() {
+        console.log('WebSocket was closed');
     });
-    ws.send("Hi there, I am a WebSocket server");
-}
-);
-
-console.log(`WebSocket server is listening at ws://localhost:${port}`);
+    // ws on error
+    ws.on('error', function() {
+        console.log('WebSocket was restarted');
+    });
+});
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -75,6 +84,3 @@ app.use('/sessions', sessionsRoute);
 app.get('/health-check', (req, res) => {
     res.status(200).send('OK');
 });
-
-// Start the server
-//app.listen(port, () => console.log(`Running at http://localhost:${port} and docs at http://localhost:${port}/docs`));

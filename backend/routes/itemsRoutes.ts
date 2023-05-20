@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
+import expressWs from "express-ws";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -28,6 +29,18 @@ router.post(
                 image: req.body.image,
             },
         });
+
+        // send a 'addItem' event with the new item data
+        // @ts-ignore
+        expressWs.getWss().clients
+            .forEach((client: any) => client
+                .send(
+                    JSON.stringify({
+                    type: 'addItem',
+                    data: item
+                }))
+            );
+
         console.log('backend: ', item)
         // Return item
         return res.status(201).send(item);
