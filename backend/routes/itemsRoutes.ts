@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
-import expressWs from "express-ws";
+import {expressWs} from "../index";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -36,9 +36,10 @@ router.post(
             .forEach((client: any) => client
                 .send(
                     JSON.stringify({
-                    type: 'addItem',
-                    data: item
-                }))
+                        type: 'addItem',
+                        item: item,
+                    })
+                )
             );
 
         console.log('backend: ', item)

@@ -32,7 +32,7 @@ const httpsServer = https.createServer(options, app).listen(port, () => {
 });
 
 // Add websocket server using npm express-ws
-const expressWs = require('express-ws')(app, httpsServer);
+export const expressWs = require('express-ws')(app, httpsServer);
 
 // Get the /ws websocket route
 // @ts-ignore
@@ -46,9 +46,10 @@ app.ws('/ws', async function(ws, req) {
         // Start listening for messages
         // send message to all clients
         // @ts-ignore
+        console.log('siin getWss töötab ja saadab klientidele sõnumi')
         expressWs.getWss().clients
             .forEach((client: any) => client
-                .send(JSON.stringify({type: msg.type, data: msg.data}))
+                .send(JSON.stringify({'message': 'helloooooo'}))
             );
     });
     // ws on close
