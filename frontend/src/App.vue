@@ -31,6 +31,7 @@ export default {
       wss: null,
       socket: {},
       message: this.message,
+      items: [],
     }
   },
   created() {
@@ -65,6 +66,9 @@ export default {
       console.log('Parsed WebSocket data:', data);
       if (data.type === 'addItem') {
         console.log('Received WebSocket message type "addItem"');
+        // Use watch and ref to update items
+        this.items.push(data.item);
+
       }
     }
   },
