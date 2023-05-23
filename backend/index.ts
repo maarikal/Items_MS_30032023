@@ -40,16 +40,16 @@ app.ws('/ws', async function(ws, req) {
     ws.on('message', async function(msg: any) {
         console.log(msg);
         // Send a received message to all connected clients
-        ws.send(msg);
+        //ws.send(msg);
 
-        ws.send(JSON.stringify({ "message" : "hello" }));
+        //ws.send(JSON.stringify({ "message" : "hello" }));
         // Start listening for messages
         // send message to all clients
+        // Do I need this getWss part? Or is it ok to be only in itemsRoutes.ts? This seems to be just hello message.
         // @ts-ignore
-        console.log('siin getWss töötab ja saadab klientidele sõnumi')
         expressWs.getWss().clients
             .forEach((client: any) => client
-                .send(JSON.stringify({'message': 'helloooooo'}))
+                .send(JSON.stringify({'message': 'hello from server'}))
             );
     });
     // ws on close

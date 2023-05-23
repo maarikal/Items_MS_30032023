@@ -16,7 +16,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(item, index) in items" key="item.id">
+      <tr v-for="(item, index) in itemList" key="item.id">
         <th>{{ index + 1 }}</th>
         <td>{{ item.name }}</td>
         <td>{{ item.description }}</td>
@@ -49,16 +49,17 @@
 
 <script>
 import {$http} from "../utils/http";
+import { mapState, mapActions } from 'vuex';
+import store from "../store/itemsStore.js";
 
 // get sessionId from localStorage (4c)
 const sessionId = localStorage.getItem('sessionId')
-console.log('Items.vue', sessionId)
+//console.log('Items.vue', sessionId)
 
 // Fetch the items from backend
 export default {
   data() {
     return {
-      items: [],
       name: '',
       description: '',
       image: '',
@@ -66,14 +67,27 @@ export default {
       /*loggedIn: sessionId ? true : false,*/
     }
   },
+  computed: {
+    ...mapState(['itemList']),
+    newItem: '',
+  },
   created() {
     $http.get('/items').then(response => {
-      this.items = response.body
+      // Dispatch the deleteStore action
+      store.dispatch('deleteStore');
+      response.body.forEach(item => {
+        this.addItem(item); // Dispatch the addItem action for each item
+      });
     })
     this.checkLoggedIn()
-    console.log('Items.vue, loggedIn: ', this.loggedIn)
+    //console.log('Items.vue, loggedIn: ', this.loggedIn)
   },
   methods: {
+    ...mapActions(['addItem']),
+    addItemToList() {
+      this.addItem(this.newItem); // Invoke the addItem action with the new item
+      this.newItem = ''; // Clear the input field after adding the item
+    },
     // Add checkLoggedIn method
     checkLoggedIn() {
       const sessionId = localStorage.getItem('sessionId')
@@ -89,7 +103,7 @@ export default {
         this.$router.push('/')
         this.loggedIn = false
       }
-      console.log('LoggedIn: ', this.loggedIn)
+      //console.log('LoggedIn: ', this.loggedIn)
       return this.loggedIn
     },
     // Add addItem method
@@ -111,7 +125,11 @@ export default {
         $http.delete(`/items?id=${id}`).then(response => {
           // Refresh the list of items
           $http.get('/items').then(response => {
-            this.items = response.body
+            console.log(response)
+            if (response.ok) {
+              console.log('Item deleted')
+              store.dispatch('deleteItemFromStore', { itemId: id });
+            }
           })
         })
       }

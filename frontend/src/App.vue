@@ -18,8 +18,12 @@
 </style>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+import store from "./store/itemsStore.js";
+
 // get sessionId from localStorage (4c)
 const sessionId = localStorage.getItem('sessionId')
+
 
 export default {
   name: 'App',
@@ -31,13 +35,16 @@ export default {
       wss: null,
       socket: {},
       message: this.message,
-      items: [],
     }
+  },
+  computed: {
+    ...mapState(['itemList']),
+    newItem: '',
   },
   created() {
     this.checkLoggedIn()
-    console.log('App.vue, loggedIn: ', this.loggedIn)
-    console.log('Problm araises when another view is mounted after user action. loggedIn has to be updated before new view is mounted. So the created() has to be used. But used emit instead')
+    //console.log('App.vue, loggedIn: ', this.loggedIn)
+    //console.log('Problm araises when another view is mounted after user action. loggedIn has to be updated before new view is mounted. So the created() has to be used. But used emit instead')
   },
   async mounted() {
     // Define socket and attach it to our data object
@@ -51,28 +58,40 @@ export default {
 
     // When we receive a message from the server, we can capture it here in the onmessage event.
     this.socket.onmessage = (event) => {
+      console.log('Received WebSocket message:', event.data);
       // We can parse the data we know to be JSON, and then check it for data attributes
       let parsedMessage = JSON.parse(event.data);
       // If those data attributes exist, we can then console log or show data to the user on their web page.
-      console.log(parsedMessage);
+      //console.log(parsedMessage);
       if(typeof parsedMessage.message !== "undefined") {
         this.message = parsedMessage.message;
         console.log('We have received a message from the server!')
       }
 
       // Handle ws message type 'addItem'
-      console.log('Received WebSocket message:', event.data);
       const data = JSON.parse(event.data);
-      console.log('Parsed WebSocket data:', data);
+      //console.log('Parsed WebSocket data:', data);
       if (data.type === 'addItem') {
         console.log('Received WebSocket message type "addItem"');
-        // Use watch and ref to update items
-        this.items.push(data.item);
-
+        // Add the new item to dom
+        this.addItem(data.item);
+      } else if (data.type === 'deleteItem') {
+        console.log('Received WebSocket message type "deleteItem"');
+        // Delete the item from dom
+        this.deleteItem(data.id);
+      } else if (data.type === 'updateItem') {
+        console.log('Received WebSocket message type "updateItem"');
+        // Update the item in dom
+        this.updateItem(data.item);
       }
     }
   },
   methods: {
+    ...mapActions(['addItem']),
+    addItemToList() {
+      this.addItem(this.newItem); // Invoke the addItem action with the new item
+      this.newItem = ''; // Clear the input field after adding the item
+    },
     handleLoggedInChange(loggedIn) {
       this.loggedIn = loggedIn;
 
@@ -118,20 +137,12 @@ export default {
     sendMessage: async function(message) {
       // We use a custom send message function, so that we can maintain reliable connection with the
       // websocket server.
-      // console log if we reach here
-      console.log('sendMessage() called')
       if (this.socket.readyState !== this.socket.OPEN) {
-        // console log if we reach here
-        console.log('sendMessage() called, but socket is not open')
         try {
-          // console log if we reach here
-          console.log('sendMessage() called, but socket is not open, trying to wait for open connection')
           await this.waitForOpenConnection(this.socket)
           this.socket.send(message)
         } catch (err) { console.error(err) }
       } else {
-        // console log if we reach here
-        console.log('sendMessage() called, and socket is open')
         this.socket.send(message)
       }
     }

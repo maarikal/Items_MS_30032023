@@ -42,7 +42,7 @@ router.post(
                 )
             );
 
-        console.log('backend: ', item)
+        //console.log('backend: ', item)
         // Return item
         return res.status(201).send(item);
     }))
@@ -80,7 +80,7 @@ router.delete(
         });
 
         // Return item
-        return res.status(200).send(item);
+        return res.status(204).end();
     }));
 
 export default router;
