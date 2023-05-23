@@ -5,4 +5,5 @@ import router from './router'
 // @ts-ignore
 import store from './store/itemsStore.js';
 
+// @ts-ignore
 createApp(App).use(store).use(router).mount('#app')

@@ -83,7 +83,7 @@ export default {
     //console.log('Items.vue, loggedIn: ', this.loggedIn)
   },
   methods: {
-    ...mapActions(['addItem']),
+    ...mapActions(['addItem', 'deleteItemFromStore']),
     addItemToList() {
       this.addItem(this.newItem); // Invoke the addItem action with the new item
       this.newItem = ''; // Clear the input field after adding the item
@@ -123,14 +123,16 @@ export default {
       if (confirm('Are you sure you want to delete this item?')) {
         // Send a DELETE /items request to the backend
         $http.delete(`/items?id=${id}`).then(response => {
-          // Refresh the list of items
-          $http.get('/items').then(response => {
-            console.log(response)
-            if (response.ok) {
-              console.log('Item deleted')
-              store.dispatch('deleteItemFromStore', { itemId: id });
-            }
-          })
+          if (response.ok) {
+            // Refresh the list of items
+            $http.get('/items').then(response => {
+              console.log(response)
+              if (response.ok) {
+                console.log('Item deleted')
+                store.dispatch('deleteItemFromStore', {itemId: id});
+              }
+            })
+          }
         })
       }
     }

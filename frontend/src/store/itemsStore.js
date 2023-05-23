@@ -20,7 +20,7 @@ const store = createStore({
             // Unregister the store module
             this.unregisterModule([]);
         },
-        deleteItem(state, itemId) {
+        deleteItemFromStore(state, itemId) {
             const index = state.itemList.findIndex(item => item.id === itemId);
             if (index !== -1) {
                 state.itemList.splice(index, 1);
@@ -36,7 +36,7 @@ const store = createStore({
         },
         deleteItemFromStore({ commit, state }, itemId) {
             console.log('deleteItemFromStore');
-            commit('deleteItem', itemId);
+            commit('deleteItemFromStore', itemId);
         }
     },
     getters: {

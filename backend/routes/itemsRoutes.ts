@@ -79,6 +79,19 @@ router.delete(
             },
         });
 
+        // send a 'deleteItem' event with the deleted item id
+        // @ts-ignore
+        expressWs.getWss().clients
+            .forEach((client: any) => client
+                .send(
+                    JSON.stringify({
+                        type: 'deleteItem',
+                        id: Number(req.query.id),
+                    }
+                    )
+                )
+            );
+
         // Return item
         return res.status(204).end();
     }));
