@@ -63,6 +63,19 @@ router.put(
                 },
             });
 
+            // send a 'updateItem' event with the updated item data
+            // @ts-ignore
+            expressWs.getWss().clients
+                .forEach((client: any) => client
+                    .send(
+                        JSON.stringify({
+                            type: 'updateItem',
+                            item: item,
+                        }
+                        )
+                    )
+                );
+
             // Return item
             return res.status(200).send(item);
         }

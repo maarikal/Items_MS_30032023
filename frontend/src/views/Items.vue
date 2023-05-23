@@ -83,7 +83,7 @@ export default {
     //console.log('Items.vue, loggedIn: ', this.loggedIn)
   },
   methods: {
-    ...mapActions(['addItem', 'deleteItemFromStore']),
+    ...mapActions(['addItem', 'deleteItemFromStore', 'updateItemInStore']),
     addItemToList() {
       this.addItem(this.newItem); // Invoke the addItem action with the new item
       this.newItem = ''; // Clear the input field after adding the item
@@ -114,6 +114,7 @@ export default {
     // add getRefilledForm method with data for the form fields and push to modify page
     getRefilledForm(id, name, description, image) {
       $http.get(`/items?id=${id}&name=${name}&description=${description}&image=${image}`).then(response => {
+        this.updateItemInStore(response.body); // Invoke the 'updateItemInStore' action with the updated item data
         this.$router.push({path: '/modify', query: {id: id, name: name, description: description, image: image}})
       })
     },

@@ -25,7 +25,14 @@ const store = createStore({
             if (index !== -1) {
                 state.itemList.splice(index, 1);
             }
-        }
+        },
+        updateItemInStore(state, item) {
+            const index = state.itemList.findIndex((existingItem) => existingItem.id === item.id);
+            if (index !== -1) {
+                // Replace the item in the list with the updated item
+                state.itemList.splice(index, 1, item);
+            }
+        },
     },
     actions: {
         addItem({ commit }, item) {
@@ -37,7 +44,10 @@ const store = createStore({
         deleteItemFromStore({ commit, state }, itemId) {
             console.log('deleteItemFromStore');
             commit('deleteItemFromStore', itemId);
-        }
+        },
+        updateItemInStore({ commit }, item) {
+            commit('updateItemInStore', item);
+        },
     },
     getters: {
         getItemList(state) {

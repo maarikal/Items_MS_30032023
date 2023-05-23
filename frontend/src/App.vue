@@ -82,12 +82,12 @@ export default {
       } else if (data.type === 'updateItem') {
         console.log('Received WebSocket message type "updateItem"');
         // Update the item in dom
-        this.updateItem(data.item);
+        this.updateItemInStore(data.item);
       }
     }
   },
   methods: {
-    ...mapActions(['addItem', 'deleteItemFromStore']),
+    ...mapActions(['addItem', 'deleteItemFromStore', 'updateItemInStore']),
     addItemToList() {
       this.addItem(this.newItem); // Invoke the addItem action with the new item
       this.newItem = ''; // Clear the input field after adding the item
