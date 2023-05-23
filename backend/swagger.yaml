@@ -1,30 +1,131 @@
 openapi: 3.0.2
 info:
-  title: notes-vso21
+  title: Items_MS API
   version: 1.0.0
+  description: List of items API
+  contact:
+    name: Maarika Lukk
+    url: 'https://github.com/maarikal'
+    email: maarika.lukk@voco.ee
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
 paths:
-  /users:
-    summary: Path used to manage the list of users.
+  /items:
+    summary: Path used to manage the list of items.
     description: >-
-      The REST endpoint/path used to list and create zero or more `User` entities.  This path contains a
-      `GET` and `POST` operation to perform the list and create tasks, respectively.
+      The REST endpoint/path used to list and create zero or more `items` entities.  This path contains
+      a `GET` and `POST` operation to perform the list and create tasks, respectively.
+    get:
+      tags:
+        - Items
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Returns items
+        '400':
+          description: Bad Request
+        '409':
+          content:
+            application/json: { }
+          description: Conflict
+      summary: Get all items
+      description: Gets a list of all `items` entities.
     post:
       requestBody:
-        description: A new `User` to be created.
+        description: A new `items` to be created.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Credentials'
+              $ref: '#/components/schemas/Item'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/Item'
         required: true
       tags:
-        - /users
+        - Items
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Return item
+      security:
+        - Bearer: [ ]
+      operationId: createitems
+      summary: Create a item
+      description: Creates a new instance of a `items`.
+  /users:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      tags:
+        - Users
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-          description: Successful response.
+              examples:
+                User not returned:
+                  value:
+                    error: User has not returned
+          description: Return user
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                'Password ':
+                  value:
+                    error: Password is required
+                Password lengths:
+                  value:
+                    error: Password must be at least 8 characters long
+          description: Bad request
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                User exists:
+                  value:
+                    error: User already exists
+          description: User already exists
+      security:
+        - Bearer: [ ]
+      summary: Create a new user
+  /users/check-email:
+    post:
+      tags:
+        - Users
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Email is valid
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User is created
         '400':
           content:
             application/json:
@@ -32,21 +133,17 @@ paths:
                 $ref: '#/components/schemas/Error'
               examples:
                 Email is required:
-                  value: |-
-                    
-                    {
-                        "error": "Email is required"
-                    }
-                Invalid Email Structure:
                   value:
-                    error: Invalid Email Structure
-                Password is required:
-                  value:
-                    error: Password is required
+                    error: Email is required
                 Password must be at least 8 characters long:
                   value:
                     error: Password must be at least 8 characters long
-          description: Bad Request
+                Invalid email structure:
+                  value:
+                    error: Invalid email structure
+          description: |-
+            Email and password is required.
+            Password must be at least 8 characters long
         '409':
           content:
             application/json:
@@ -56,15 +153,190 @@ paths:
                 Email already exists:
                   value:
                     error: Email already exists
-          description: Conflict
-      operationId: createUser
-      summary: Create a User
-      description: Creates a new instance of a `User`.
+          description: Email already exists
+      security:
+        - Bearer: [ ]
+      summary: Create a new email
+  /health-check:
+    get:
+      tags:
+        - Health-checks
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: OK
+      summary: Get project load information
+  /sessions:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/Session'
+        required: true
+      tags:
+        - Sessions
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Send sessionId
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Email or password is required
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid email or password
+      security:
+        - Bearer: [ ]
+      summary: Create a new session
+    delete:
+      tags:
+        - Sessions
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Session not found:
+                  value:
+                    error: Session not found
+          description: SessionId deleted
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                No session:
+                  value:
+                    error: No session found
+          description: No session found
+      security:
+        - Bearer: [ ]
+      summary: Delete a session
+  '/items?id={itemsId}':
+    summary: Path used to manage a single items.
+    description: >-
+      The REST endpoint/path used to get, update, and delete single instances of an `items`.  This path
+      contains `GET`, `PUT`, and `DELETE` operations used to perform the get, update, and delete tasks,
+      respectively.
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      tags:
+        - Items
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Item:
+                  value: |-
+                    {
+                        "error": Item has not been returned"
+                    }
+          description: Return item
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Not created:
+                  value:
+                    error: Item has not created
+          description: Item created
+        '202':
+          description: Successful response.
+      security:
+        - Bearer: [ ]
+      operationId: updateitem
+      summary: Update a item
+      description: Updates an existing item.
+    post:
+      requestBody:
+        description: Added item information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      tags:
+        - Items
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Not created:
+                  value:
+                    error: Item has not created
+          description: Item created
+        '202':
+          description: Successful response.
+      security:
+        - Bearer: [ ]
+      operationId: addeditem
+      summary: Add a new item
+      description: Added new item.
+    delete:
+      tags:
+        - Items
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Return item
+        '204':
+          description: Successful response.
+      operationId: deleteitems
+      summary: Delete a item
+      description: Deletes an existing `items`.
+    parameters:
+      - name: itemsId
+        description: A unique identifier for a `items`.
+        schema:
+          type: string
+        in: path
+        required: true
 components:
   schemas:
     User:
       title: Root Type for User
-      description: ''
+      description: 'If person have signed up, then he will be on database. With these data he/she can sign in too.'
       type: object
       properties:
         email:
@@ -72,22 +344,40 @@ components:
         id:
           format: int32
           type: integer
+        password:
+          type: string
       example:
-        email: asd6@asd.ee
-        id: 14
-    Credentials:
-      title: Root Type for Credentials
-      description: ''
+        email: test@test.ee
+        id: 1
+        password: qwerty12
+    Item:
+      title: Root Type for items
+      description: Items list
       type: object
       properties:
-        email:
+        item:
           type: string
-        password:
-          format: date
+        description:
+          type: string
+        image:
           type: string
       example:
-        email: asd6@asd.ee
-        password: '11111111'
+        item: item nr 1
+        description: it is green and small
+        image: >-
+          https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
+    Session:
+      title: Root Type for Session
+      description: 'If user is on webpage and have logged in, then he/she has a sessionId.'
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+      example:
+        id: '123456789'
+        userId: '2'
     Error:
       title: Root Type for Error
       description: ''
@@ -97,6 +387,28 @@ components:
           type: string
       example:
         error: Email is required
+    Credentials:
+      title: Root Type for Credentials
+      description: ''
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: test@test.ee
+        password: qwerty123
+  securitySchemes:
+    Bearer:
+      scheme: bearer
+      type: http
 tags:
-  - name: /users
+  - name: Items
+    description: ''
+  - name: Sessions
+    description: ''
+  - name: Users
+    description: ''
+  - name: Health-checks
     description: ''

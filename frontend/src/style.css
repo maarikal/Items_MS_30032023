@@ -35,6 +35,11 @@ nav {
 
 nav a {
     margin-right: 2rem;
+    color: #047AFF
+}
+
+nav a:hover {
+    color: #463AA2
 }
 
 body {
@@ -53,7 +58,6 @@ h2 {
     font-size: 1.8em;
     line-height: 1.1;
 }
-
 button {
     border-radius: 8px;
     border: 1px solid transparent;
@@ -65,22 +69,28 @@ button {
     cursor: pointer;
     transition: border-color 0.25s;
 }
+
 button:hover {
-  border-color: #646cff;
+    border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+.btn-primary {
+    float: right;
 }
 
 .card {
-  padding: 2em;
+    padding: 2em;
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 @media (prefers-color-scheme: light) {

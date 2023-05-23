@@ -1,10 +1,9 @@
 <template>
   <br>
   <h2>Here is our list of items: </h2>
-  <button class="btn btn-primary" @click="addItemButton">Add Item</button>
-  <br>
-  <div class="overflow-x-auto">
-    <table class="table table-zebra w-full">
+  <button class="btn btn-primary btn-wide " @click="addItemButton">Add Item</button>
+  <div>
+    <table class="table table-zebra table-compact">
       <thead>
       <tr>
         <th></th>
