@@ -1,7 +1,48 @@
 <!-- src/views/SignIn.vue -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 import {$http} from '../utils/http'
+import '../../googleGSI.js'
+
+// Google Sign In (GSI) starts here
+window.onload = function () {
+  google.accounts.id.initialize({
+    client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
+    callback: handleCredentialResponse
+  });
+  // Google prompt
+  // google.accounts.id.prompt();
+
+  google.accounts.id.renderButton(
+      document.getElementById('signInDiv'),
+      {
+        theme: 'filled_blue',
+        size: 'large',
+        text: 'long',
+        type: 'standard'
+      }
+  )
+};
+
+function handleCredentialResponse(response) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://localhost:3000/oAuth2Login');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    // check if the response is valid
+    if (xhr.status === 201) {
+      // parse the response
+      let response = JSON.parse(xhr.responseText);
+      let sessionId = response.sessionId
+      // parse the response and extract the sessionId and save it in a cookie
+      localStorage.setItem("sessionId", this.sessionId);
+      this.sessionId = sessionId;
+    } else {
+      console.log('Request failed.  Returned status of ' + xhr.status);
+    }
+  };
+  xhr.send(JSON.stringify(response));
+}
+// GSI ends here
 
 export default {
   // If the listener is intended to be a component custom event listener only, declare it using the "emits" option.
@@ -13,46 +54,7 @@ export default {
       sessionId: '',
     }
   },
-  mounted() {
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
-        callback: handleCredentialResponse
-      });
-      // Google prompt
-      // google.accounts.id.prompt();
-
-      google.accounts.id.renderButton(
-          document.getElementById('signInDiv'),
-          {
-            theme: 'filled_blue',
-            size: 'large',
-            text: 'long',
-            type: 'standard'
-          }
-      )
-    };
-  },
   methods: {
-    handleCredentialResponse(response) {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://localhost:3000/oAuth2Login');
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.onload = function () {
-        // check if the response is valid
-        if (xhr.status === 201) {
-          // parse the response
-          let response = JSON.parse(xhr.responseText);
-          let sessionId = response.sessionId
-          // parse the response and extract the sessionId and save it in a cookie
-          localStorage.setItem("sessionId", this.sessionId);
-          this.sessionId = sessionId;
-        } else {
-          console.log('Request failed.  Returned status of ' + xhr.status);
-        }
-      };
-      xhr.send(JSON.stringify(response));
-    },
     signIn() {
 
       // Send a POST request to the backend
@@ -82,9 +84,12 @@ export default {
 <template>
   <div>
     <h1>Sign In</h1>
+    <div class="h-30">&nbsp;</div>
     <!-- Google Sign In -->
     <div id="signInDiv"></div>
+    <div class="h-30">&nbsp;</div>
     <div class="h-30">or sign in with e-mail and password</div>
+    <div class="h-30">&nbsp;</div>
 
     <!-- Email -->
     <div class="form-control w-full max-w-xs">
