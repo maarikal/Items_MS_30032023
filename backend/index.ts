@@ -9,6 +9,7 @@ import cors from 'cors';
 import sessionsRoute from "./routes/sessionsRoute";
 import bodyParser from "body-parser";
 import bodyParserXml from "body-parser-xml";
+import oAuth2LoginRoute from "./routes/oAuth2LoginRoute";
 
 dotenv.config();
 const port: number = Number(process.env.PORT) || 3000;
@@ -80,6 +81,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/users', usersRoutes);
 app.use('/items', itemsRoutes);
 app.use('/sessions', sessionsRoute);
+app.use('/oAuth2Login', oAuth2LoginRoute);
 
 // Health check
 app.get('/health-check', (req, res) => {
