@@ -66,7 +66,6 @@ export class $http {
             };
             // send the request with or without data, depending on whether it's null
             xhr.send(data !== null ? JSON.stringify(data) : undefined);
-
         });
 
     }

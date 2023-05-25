@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
+import {expressWs} from "../index";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -28,7 +29,18 @@ router.post(
                 image: req.body.image,
             },
         });
-        console.log('backend: ', item)
+
+        // send a 'addItem' event with the new item data
+        // @ts-ignore
+        expressWs.getWss().clients
+            .forEach((client: any) => client
+                .send(
+                    JSON.stringify({
+                        type: 'addItem',
+                        item: item,
+                    })
+                )
+            );
         // Return item
         return res.status(201).send(item);
     }))
@@ -49,6 +61,19 @@ router.put(
                 },
             });
 
+            // send a 'updateItem' event with the updated item data
+            // @ts-ignore
+            expressWs.getWss().clients
+                .forEach((client: any) => client
+                    .send(
+                        JSON.stringify({
+                                type: 'updateItem',
+                                item: item,
+                            }
+                        )
+                    )
+                );
+
             // Return item
             return res.status(200).send(item);
         }
@@ -65,8 +90,21 @@ router.delete(
             },
         });
 
+        // send a 'deleteItem' event with the deleted item id
+        // @ts-ignore
+        expressWs.getWss().clients
+            .forEach((client: any) => client
+                .send(
+                    JSON.stringify({
+                            type: 'deleteItem',
+                            id: Number(req.query.id),
+                        }
+                    )
+                )
+            );
+
         // Return item
-        return res.status(200).send(item);
+        return res.status(204).end();
     }));
 
 export default router;
