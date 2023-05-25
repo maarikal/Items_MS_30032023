@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
+import logger from "../logger";
 import {expressWs} from "../index";
 
 const prisma = new PrismaClient();
@@ -29,6 +30,23 @@ router.post(
                 image: req.body.image,
             },
         });
+        console.log('backend: ', item)
+
+        // send a 'addItem' event with the new item data
+        // @ts-ignore
+        expressWs.getWss().clients
+            .forEach((client: any) => client
+                .send(
+                    JSON.stringify({
+                        type: 'addItem',
+                        item: item,
+                    })
+                )
+            );
+
+        // Log item creation
+        logger.info('Item created', {item});
+
 
         // send a 'addItem' event with the new item data
         // @ts-ignore
@@ -45,7 +63,7 @@ router.post(
         return res.status(201).send(item);
     }))
 
-// Add route to update item in database using put PUT http://localhost:3000/items?id=71
+// Add route to update item in database using PUT http://localhost:3000/items?id=71
 router.put(
     '/',
     handleErrors(async (req: Request, res: Response) => {
@@ -60,6 +78,8 @@ router.put(
                     image: req.body.image,
                 },
             });
+            // Log item update
+            logger.info('Item updated', {item});
 
             // send a 'updateItem' event with the updated item data
             // @ts-ignore
@@ -102,6 +122,8 @@ router.delete(
                     )
                 )
             );
+        // Log item deletion
+        logger.info('Item deleted', {item});
 
         // Return item
         return res.status(204).end();

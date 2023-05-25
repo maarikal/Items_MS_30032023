@@ -41,7 +41,7 @@ export default {
         // Redirect to list of items page
         this.$router.push('/items')
       })
-      console.log("uuuuu", this.$route.query.id)
+      console.log("uuendatud", this.$route.query.id)
     }
   }
 }

@@ -2,6 +2,7 @@ import express, {NextFunction, Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
+import logger from "../logger";
 
 const verifier = require('@gradeup/email-verify');
 
@@ -49,6 +50,9 @@ router.post(
 
         // Remove the password from the user object
         delete userCopy.password;
+
+        // Log user creation
+        logger.info('User created', {user});
 
         // Return user
         return res.status(201).send(userCopy);
@@ -107,7 +111,7 @@ async function verifyEmail(email: string): Promise<any> {
 
 function tryToParseJson(jsonString: string): any {
     try {
-        var o = JSON.parse(jsonString);
+        let o = JSON.parse(jsonString);
         if (o && typeof o === 'object') {
             return o;
         }

@@ -22,6 +22,8 @@ import {mapState, mapActions} from 'vuex';
 import store from "./store/itemsStore.js";
 
 // get sessionId from localStorage (4c)
+import {$http} from "./utils/http.ts";
+
 const sessionId = localStorage.getItem('sessionId')
 
 
@@ -107,6 +109,9 @@ export default {
     logout() {
       localStorage.removeItem('sessionId')
       this.loggedIn = false
+      // Notify backend to delete session
+      $http.delete('/sessions/' + this.sessionId)
+
       this.$router.push('/')
     },
     // ws support starts here

@@ -9,6 +9,7 @@ import cors from 'cors';
 import sessionsRoute from "./routes/sessionsRoute";
 import bodyParser from "body-parser";
 import bodyParserXml from "body-parser-xml";
+import logsRoute from "./routes/logsRoute";
 
 dotenv.config();
 const port: number = Number(process.env.PORT) || 3000;
@@ -74,6 +75,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/users', usersRoutes);
 app.use('/items', itemsRoutes);
 app.use('/sessions', sessionsRoute);
+app.use('/logs', logsRoute);
 
 // Health check
 app.get('/health-check', (req, res) => {
