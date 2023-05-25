@@ -24,23 +24,27 @@ window.onload = function () {
 };
 
 function handleCredentialResponse(response) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'https://localhost:3000/oAuth2Login');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function () {
-    // check if the response is valid
-    if (xhr.status === 201) {
-      // parse the response
-      let response = JSON.parse(xhr.responseText);
-      let sessionId = response.sessionId
-      // parse the response and extract the sessionId and save it in a cookie
-      localStorage.setItem("sessionId", this.sessionId);
-      this.sessionId = sessionId;
-    } else {
-      console.log('Request failed.  Returned status of ' + xhr.status);
-    }
-  };
-  xhr.send(JSON.stringify(response));
+  // Did we get here?
+  console.log('handleCredentialResponse', response);
+
+  // Send the response to the backend
+  $http.post('/oAuth2Login', {
+    token: response.credential,
+  }).then(response => {
+    // Save to localStorage (4a)
+    const sessionId = response.body.sessionId
+    localStorage.setItem('sessionId', sessionId)
+    console.log('signIn.vue', sessionId)
+
+    // Share loggedIn state with parent component
+    // Set the loggedIn property to true
+    this.loggedIn = true
+    // Emit the 'loggedInChange' event to notify the parent component
+    this.$emit('loggedInChange', this.loggedIn)
+
+    // Redirect to list of items page
+    this.$router.push('/items')
+  })
 }
 // GSI ends here
 

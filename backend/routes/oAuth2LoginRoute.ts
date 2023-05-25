@@ -1,4 +1,5 @@
 import express, {NextFunction, Request, Response} from 'express';
+
 const router = express.Router();
 // Google sign-in
 import {OAuth2Client} from 'google-auth-library';
@@ -8,32 +9,29 @@ const googleOAuth2Client = new OAuth2Client('668250301704-q7j4t8tnkmk88j3d6jsrku
 // Google sign-in route
 /*import express, {Request, Response} from "express";*/
 
-router.post('/oAuth2Login', async (req, res) => {
-    try {
-        const dataFromGoogleJwt = await getDataFromGoogleJwt(req.body.credential)
-        if (dataFromGoogleJwt) {
-/*            let user = users.findBy('sub', dataFromGoogleJwt.sub);
-            if (!user) {
-                user = createUser(dataFromGoogleJwt.email, null, dataFromGoogleJwt.sub)
-            }
-            login(user, req);
-            log("oAuth2Login", `${dataFromGoogleJwt.name} (${dataFromGoogleJwt.email}) logged in with Google OAuth2 as user ${user.email}`);
-            let clientBookedTimes = times.filter((time) => time.userId === user.id);*/
-            res.status(201).send({
-                sessionId: '1234'
-            })
+// Google sign-in route
+router.post(
+    '/',
+    async (req: Request, res: Response) => {
+        // Did we get here?
+        console.log("oAuth2Login", `req.body.token: ${req.body.token}`);
+        const sessionId = req.body.token;
+        const payload = await getDataFromGoogleJwt(sessionId);
+        // console log payload
+        console.log("oAuth2Login", `payload: ${payload}`);
+        if (payload) {
+            res.status(200).send(payload);
+        } else {
+            res.status(401).send('Unauthorized');
         }
-    } catch (err) {
-        return res.status(400).send({error: 'Login unsuccessful'});
-    }
-});
+    })
 
 // middleware to verify the JWT token
 // function getDataFromGoogleJwt
-async function getDataFromGoogleJwt(token: string) {
+async function getDataFromGoogleJwt(sessionId: string) {
     try {
         const ticket = await googleOAuth2Client.verifyIdToken({
-            idToken: token,
+            idToken: sessionId,
             audience: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
         });
         const payload = ticket.getPayload();
