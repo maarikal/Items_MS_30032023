@@ -16,6 +16,8 @@
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0"
   },
   "dependencies": {
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "vuejs-text-logger": "^0.0.6",
+    "winston": "^3.8.2"
   }
 }

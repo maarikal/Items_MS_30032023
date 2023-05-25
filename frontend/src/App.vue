@@ -19,6 +19,8 @@
 
 <script>
 // get sessionId from localStorage (4c)
+import {$http} from "./utils/http.ts";
+
 const sessionId = localStorage.getItem('sessionId')
 
 export default {
@@ -54,6 +56,9 @@ export default {
     logout() {
       localStorage.removeItem('sessionId')
       this.loggedIn = false
+      // Notify backend to delete session
+      $http.delete('/sessions/' + this.sessionId)
+
       this.$router.push('/')
     }
   }

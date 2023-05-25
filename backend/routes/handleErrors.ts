@@ -1,20 +1,18 @@
-import express, {Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction} from 'express';
 
 // Define a type for route handlers
-type RouteHandler = (req: Request, res: Response) => Promise<void | express.Response>;
+type HandlerWithNext = (req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | Promise<Response<any, Record<string, any>>> | void;
 
-// This function is used to wrap route handlers in a try/catch block in order to catch any errors that may be thrown from the route handler.
-export const handleErrors = (routeHandler: RouteHandler) => {
+type HandlerWithoutNext = (req: Request, res: Response) => Response<any, Record<string, any>> | Promise<Response<any, Record<string, any>>> | void;
 
+export const handleErrors = (...routeHandlers: Array<HandlerWithNext | HandlerWithoutNext>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-
-            // Call the route handler
-            return await routeHandler(req, res);
-
+            for (const routeHandler of routeHandlers) {
+                await routeHandler(req, res, next);
+            }
+            return;
         } catch (err) {
-
-            // If the route handler throws an error, it will be caught here and passed to the next() function.
             next(err);
         }
     };

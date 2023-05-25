@@ -13,9 +13,10 @@ items, add new items (if signed in), and delete existing items (if signed in).
 2. Run `openssl genrsa -out key.pem` to generate a private key for self-signed SSL
 3. Run `openssl req -new -key key.pem -out csr.pem` to generate a certificate signing request
 4. Run `openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem` to generate a self-signed certificate
-5. Run `cp backend/.env.example backend/.env` to create the backend environment file
+5. Run `cp backend/.env.example backend/.env` to crm i --save-dev @types/body-parser-xml` to install xml body parser
+   typeseate the backend environment file
 6. Run `cp frontend/.env.example frontend/.env` to create the frontend environment file
-7. Run `npm i --save-dev @types/body-parser-xml` to install xml body parser types
+7. Run `np
 8. Run `npm run install` to install the dependencies for both the frontend and the backend
 9. Run `cd backend && npx prisma db push` to create the database tables
 10. Run `npm run import:db && cd ..` to import sample data into the database

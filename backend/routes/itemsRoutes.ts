@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
+import logger from "../logger";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -29,11 +30,15 @@ router.post(
             },
         });
         console.log('backend: ', item)
+
+        // Log item creation
+        logger.info('Item created', {item});
+
         // Return item
         return res.status(201).send(item);
     }))
 
-// Add route to update item in database using put PUT http://localhost:3000/items?id=71
+// Add route to update item in database using PUT http://localhost:3000/items?id=71
 router.put(
     '/',
     handleErrors(async (req: Request, res: Response) => {
@@ -48,6 +53,8 @@ router.put(
                     image: req.body.image,
                 },
             });
+            // Log item update
+            logger.info('Item updated', {item});
 
             // Return item
             return res.status(200).send(item);
@@ -64,6 +71,8 @@ router.delete(
                 id: Number(req.query.id),
             },
         });
+        // Log item deletion
+        logger.info('Item deleted', {item});
 
         // Return item
         return res.status(200).send(item);
