@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
 import {v4 as uuid} from 'uuid';
 import logger from "../logger";
-import authorizeRequest from '../functions';
+import authorizeRequest, {verifySession} from '../functions';
 import {IRequestWithSession} from "../function";
 
 
@@ -18,11 +18,11 @@ router.post(
     handleErrors(async (req: IRequestWithSession, res: Response) => {
         // Validate that user email and password exist (3a)
         if (!req.body.email) {
-            return res.status(400).send({error: 'Email is required'});
+            return res.status(401).send({error: 'Email is required'});
         }
 
         if (!req.body.password) {
-            return res.status(400).send({error: 'Password is required'});
+            return res.status(401).send({error: 'Password is required'});
         }
 
         // Find the user by email from database (3b)
@@ -61,7 +61,6 @@ router.post(
 
             // Send response with new session if (3e)
             return res.status(201).send({sessionId: session.id});
-            console.log(session.id)
         }
     }));
 

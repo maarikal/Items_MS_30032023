@@ -7,6 +7,7 @@ import SignIn from '../views/SignIn.vue';
 import Intro from '../views/Intro.vue';
 import Items from '../views/Items.vue';
 import Modify from '../views/ItemAddUpdate.vue';
+import Log from '../views/Log.vue'
 
 const routes = [
 
@@ -34,6 +35,11 @@ const routes = [
         path: '/modify',
         name: 'Modify items',
         component: Modify,
+    },
+    {
+        path: '/logs',
+        name: 'Log-file',
+        component: Log,
     }
 ];
 

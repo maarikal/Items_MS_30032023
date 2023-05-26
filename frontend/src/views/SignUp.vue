@@ -54,7 +54,7 @@ export default {
         <span class="label-text">Email</span>
       </label>
       <input type="text" name="email" placeholder="Type here" class="input input-bordered w-full max-w-xs"
-             v-on:keyup="checkEmail"
+             v-on:blur="checkEmail"
              v-model="signUpEmail"/>
       <label class="label">
         <!-- Show red text if the email is already taken -->
@@ -80,7 +80,7 @@ export default {
     </div>
   </div>
   <div class="h-30">&nbsp;</div>
-  <button id="sign-up" class="btn btn-primary" @click="signUp">Sign Up</button>
+  <button id="sign-up" class="btn btn-primary" @click="signUp" data-cy="signUp">Sign Up</button>
 </template>
 
 

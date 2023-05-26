@@ -4,7 +4,8 @@ import {createStore} from 'vuex';
 const app = createApp({});
 const store = createStore({
     state: {
-        itemList: []
+        itemList: [],
+        loggedIn: false,
     },
     mutations: {
         addItem(state, item) {
@@ -33,6 +34,10 @@ const store = createStore({
                 state.itemList.splice(index, 1, item);
             }
         },
+        // add manage loggedIn state
+        setLoggedIn(state, loggedIn) {
+            state.loggedIn = loggedIn;
+        }
     },
     actions: {
         addItem({commit}, item) {
@@ -48,10 +53,18 @@ const store = createStore({
         updateItemInStore({commit}, item) {
             commit('updateItemInStore', item);
         },
+        // add manage loggedIn state
+        setLoggedIn({commit}, loggedIn) {
+            commit('setLoggedIn', loggedIn);
+        }
     },
     getters: {
         getItemList(state) {
             return state.itemList;
+        },
+        // add manage loggedIn state
+        getLoggedIn(state) {
+            return state.loggedIn;
         }
     }
 });

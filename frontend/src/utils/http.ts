@@ -74,8 +74,8 @@ export class $http {
         return this.request('POST', url, data, config);
     }
 
-    static get(url: string, config = {}) {
-        return this.request('GET', url, null, config);
+    static get(url: string, data: any, config = {}) {
+        return this.request('GET', url, data, config);
     }
 
     static delete(url: string) {
@@ -86,6 +86,4 @@ export class $http {
         console.log('url: ', url);
         return this.request('PUT', url, data, null);
     }
-
-
 }

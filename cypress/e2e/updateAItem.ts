@@ -20,7 +20,7 @@ When("I update the item's details", () => {
 });
 
 When("I click the {string} button", () => {
-    cy.get("button#update-item").click();
+    cy.get("[data-cy=updateItem]").click();
 });
 
 Then("the item details should be updated", () => {

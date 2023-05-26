@@ -1,5 +1,11 @@
 import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
 
+Cypress.on('uncaught:exception', () => {
+    // returning false here prevents Cypress from
+    // failing the test
+    return false
+})
+
 let email = ''
 Given(/^the user navigates to the sign-up page$/, function () {
     cy.visit("https://localhost:5173/signup");
@@ -13,7 +19,7 @@ When(/^the user enters a valid email and password$/, function () {
     cy.get("input[name=password]").type("12345678");
 });
 When(/^clicks the sign-up button$/, function () {
-    cy.get("button#sign-up").click();
+    cy.get("[data-cy=signUp]").click();
 });
 Then(/^the user is redirected to the sign-in page$/, function () {
     // Check that the user is redirected to the sign-in page

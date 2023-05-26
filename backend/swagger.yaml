@@ -24,14 +24,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item returned:
+                  value:
+                    Item: Item returned
           description: Returns items
         '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request:
+                  value:
+                    error: Bad Request
           description: Bad Request
         '409':
           content:
-            application/json: { }
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Conflict:
+                  value:
+                    error: Item already exists
           description: Conflict
+      security:
+        - Bearer: [ ]
       summary: Get all items
       description: Gets a list of all `items` entities.
     post:
@@ -52,7 +72,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item returned:
+                  value:
+                    Item: Item returned
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item returned:
+                  value: "<text>Item returned</text>\r\n"
           description: Return item
       security:
         - Bearer: [ ]
@@ -79,11 +109,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
               examples:
-                User not returned:
+                User returned:
                   value:
-                    error: User has not returned
+                    User: Returned
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                User returned:
+                  value: <text>User returned</text>
           description: Return user
         '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request:
+                  value:
+                    error: Bad Request
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                '"Bad Request':
+                  value: <text>"Bad Request</text>
+          description: Bad request
+        '401':
           content:
             application/json:
               schema:
@@ -95,7 +147,20 @@ paths:
                 Password lengths:
                   value:
                     error: Password must be at least 8 characters long
-          description: Bad request
+                Email:
+                  value:
+                    error: Email is required
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Password is required:
+                  value: <text>Password is required</text>
+                Password must be at least 8 characters long:
+                  value: <text>Password must be at least 8 characters long</text>
+                Email is required":
+                  value: <text>Email is required"</text>
+          description: Invalid email or password
         '409':
           content:
             application/json:
@@ -105,6 +170,12 @@ paths:
                 User exists:
                   value:
                     error: User already exists
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                User already exists:
+                  value: <text>User already exists</text>
           description: User already exists
       security:
         - Bearer: [ ]
@@ -118,15 +189,33 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/User'
+              examples:
+                Email is valid:
+                  value:
+                    User: Email is valid
           description: Email is valid
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+              examples:
+                User is created:
+                  value:
+                    User: Created
           description: User is created
         '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request:
+                  value:
+                    error: Bad Request
+          description: Bad Request
+        '401':
           content:
             application/json:
               schema:
@@ -167,6 +256,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                Is Working:
+                  value:
+                    error: works
           description: OK
       summary: Get project load information
   /sessions:
@@ -175,10 +268,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/User'
           text/xml:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/User'
         required: true
       tags:
         - Sessions
@@ -187,20 +280,70 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Session'
+              examples:
+                SessionId:
+                  value:
+                    Session: SessionId created
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                SessionId:
+                  value: <text>SessionId created</text>
           description: Send sessionId
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: Email or password is required
+              examples:
+                Bad Request Error:
+                  value:
+                    error: Bad Request Error
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request Error:
+                  value: <text>Bad Request Error</text>
+          description: Bad Request
         '401':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: Invalid email or password
+              examples:
+                Authorization missing:
+                  value:
+                    error: Authorization header is missing
+                Bearer:
+                  value:
+                    error: Authorization header is not in Bearer XXX format
+                Session not found:
+                  value:
+                    error: Session not found
+                User not found:
+                  value:
+                    error: User not found
+                Unauthorized:
+                  value:
+                    error: Unauthorized
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Authorization missing:
+                  value: <text>Authorization header is missing</text>
+                Bearer:
+                  value: <text>Authorization header is not in Bearer XXX format</text>
+                Session not found:
+                  value: <text>Session not found</text>
+                User not found:
+                  value: <text>User not found</text>
+                Unauthorized:
+                  value: <text>Unauthorized</text>
+          description: Unauthorized
       security:
         - Bearer: [ ]
       summary: Create a new session
@@ -212,12 +355,34 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                SessionId deleted:
+                  value:
+                    Session: SessionId deleted
+          description: SessionId deleted
+        '401':
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/Error'
               examples:
+                Unauthorized:
+                  value:
+                    error: Unauthorized
                 Session not found:
                   value:
                     error: Session not found
-          description: SessionId deleted
+                "Authorization missing\t":
+                  value:
+                    error: Authorization header is missing
+                Bearer:
+                  value:
+                    error: Authorization header is not in Bearer XXX
+                User not found:
+                  value:
+                    error: User not found
+          description: Unauthorized
         '404':
           content:
             application/json:
@@ -254,13 +419,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Item'
               examples:
                 Item:
-                  value: |-
-                    {
-                        "error": Item has not been returned"
-                    }
+                  value:
+                    Item: Item returned
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item returned:
+                  value: <text>Item returned</text>
           description: Return item
         '201':
           content:
@@ -268,11 +437,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
               examples:
-                Not created:
+                Item created:
                   value:
-                    error: Item has not created
+                    Item: Item created
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item created:
+                  value: <text>Item created</text>
           description: Item created
         '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Response:
+                  value:
+                    Item: Successful response
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Successful response:
+                  value: <text>Successful response</text>
           description: Successful response.
       security:
         - Bearer: [ ]
@@ -299,11 +488,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
               examples:
-                Not created:
+                Created:
                   value:
-                    error: Item has not created
+                    Item: Item has created
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Created:
+                  value: <text>Item created</text>
           description: Item created
         '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                ' Successful response.':
+                  value:
+                    Item: Successful response
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                ' Successful response.':
+                  value: <text>Successful response</text>
           description: Successful response.
       security:
         - Bearer: [ ]
@@ -319,9 +528,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                Item deleted:
+                  value:
+                    Item: Deleted
           description: Return item
         '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Successful response.:
+                  value:
+                    Item: Successful response
           description: Successful response.
+      security:
+        - Bearer: [ ]
       operationId: deleteitems
       summary: Delete a item
       description: Deletes an existing `items`.
@@ -341,9 +564,6 @@ components:
       properties:
         email:
           type: string
-        id:
-          format: int32
-          type: integer
         password:
           type: string
       example:
@@ -355,11 +575,11 @@ components:
       description: Items list
       type: object
       properties:
-        item:
-          type: string
         description:
           type: string
         image:
+          type: string
+        name:
           type: string
       example:
         item: item nr 1
@@ -371,22 +591,13 @@ components:
       description: 'If user is on webpage and have logged in, then he/she has a sessionId.'
       type: object
       properties:
-        id:
+        user:
           type: string
-        userId:
-          type: string
-      example:
-        id: '123456789'
-        userId: '2'
-    Error:
-      title: Root Type for Error
-      description: ''
-      type: object
-      properties:
-        error:
+        password:
           type: string
       example:
-        error: Email is required
+        user: test@test.ee
+        password: qwerty123
     Credentials:
       title: Root Type for Credentials
       description: ''
@@ -399,6 +610,12 @@ components:
       example:
         email: test@test.ee
         password: qwerty123
+    Error:
+      description: |-
+        {
+            "error:" "Error message"
+        }
+      type: object
   securitySchemes:
     Bearer:
       scheme: bearer

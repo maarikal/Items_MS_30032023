@@ -24,13 +24,13 @@ router.post(
     handleErrors(async (req: Request, res: Response) => {
         // Validate password
         if (!req.body.password) {
-            return res.status(400).send({error: 'Password is required'});
+            return res.status(401).send({error: 'Password is required'});
         }
 
         // Check if the password is correct
         if (req.body.password.length < 8) {
             return res
-                .status(400)
+                .status(401)
                 .send({error: 'Password must be at least 8 characters long'});
         }
 
@@ -67,7 +67,7 @@ async function requireValidEmail(
 ) {
     // Validate email
     if (!req.body.email) {
-        return res.status(400).send({error: 'Email is required'});
+        return res.status(401).send({error: 'Email is required'});
     }
 
     try {

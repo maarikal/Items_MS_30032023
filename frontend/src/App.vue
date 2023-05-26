@@ -5,8 +5,8 @@
     <nav>
       <router-link v-if="!loggedIn" to="/signup">Sign Up</router-link>
       <router-link v-if="!loggedIn" to="/signin">Sign In</router-link>
-      <router-link v-if="loggedIn" to="/items" :id="'listOfItems'">List of Items</router-link>
-      <a v-if="loggedIn" href="#" @click="logout">Sign Out</a>
+      <router-link v-if="loggedIn" to="/items" :id="'listOfItems'" data-cy="listOfItems">List of Items</router-link>
+      <a v-if="loggedIn" href="#" @click="logout" data-cy="logOut">Sign Out</a>
 
     </nav>
     <router-view @loggedInChange="handleLoggedInChange" />

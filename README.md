@@ -15,14 +15,16 @@ items, add new items (if signed in), and delete existing items (if signed in).
 4. Run `openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem` to generate a self-signed certificate
 5. Run `cp backend/.env.example backend/.env` to create the backend environment file
 6. Run `cp frontend/.env.example frontend/.env` to create the frontend environment file
-7. Run `npm i --save-dev @types/body-parser-xml` to install xml body parser types
-8. Run `npm run install` to install the dependencies for both the frontend and the backend
-9. Run `cd backend && npx prisma db push` to create the database tables
-10. Run `npm run import:db && cd ..` to import sample data into the database
-11. Run `npm i @badeball/cypress-cucumber-preprocessor` to install the Badeball Cypress Cucumber Preprocessor
-12. Run `npm run dev` from the project root directory to start the frontend and the backend servers at the same time
-13. Go to `https://localhost:3000` and accept the self-signed certificate
-14. Go to `https://localhost:5173` to see the app
+7. Run `npm i @badeball/cypress-cucumber-preprocessor` to install the Badeball Cypress Cucumber Preprocesso
+8. Run `npm i sax` to install the sax XML parser
+9. Run `npm i --save-dev @types/body-parser-xml` to install xml body parser types
+10. Run `npm i --save-dev@tyes/uuid` to install uuid types
+11. Run `npm run install` to install the dependencies for both the frontend and the backend
+12. Run `cd backend && npx prisma db push` to create the database tables
+13. Run `npm run import:db && cd ..` to import sample data into the database
+14. Run `npm run dev` from the project root directory to start the frontend and the backend servers at the same time
+15. Go to `https://localhost:3000` and accept the self-signed certificate
+16. Go to `https://localhost:5173` to see the app
 
 ### Documentation
 

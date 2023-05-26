@@ -63,13 +63,13 @@ export default {
              v-model="signInPassword"/>
       <label class="label">
         <!-- Show red text if the password is too short -->
-        <span class="label-text-alt text-red-600" id="password-error"
-              :class="{ invisible: !(signInPassword.length > 0 && signInPassword.length < 8) }">Password must be at least 8 characters long</span>
-      </label>
+        <!--        <span class="label-text-alt text-red-600" id="password-error"
+                      :class="{ invisible: !(signInPassword.length > 0 && signInPassword.length < 8) }">Password must be at least 8 characters long</span>
+             --> </label>
     </div>
   </div>
   <div class="h-30">&nbsp;</div>
-  <button id="sign-in" class="btn btn-primary" @click="signIn">Sign In</button>
+  <button id="sign-in" class="btn btn-primary" @click="signIn" data-cy="signIn">Sign In</button>
 </template>
 
 

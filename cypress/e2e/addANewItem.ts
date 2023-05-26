@@ -3,11 +3,12 @@ import {Given, When, Then} from "@badeball/cypress-cucumber-preprocessor";
 let itemName = ''
 
 Given('that I am a logged in user', () => {
-    localStorage.setItem('sessionId', 'bogusSessionIdForTesting');
+    window.localStorage.setItem('sessionId', 'bogusSessionIdForTesting');
 });
 
 When('I navigate to the "Add Item" page', () => {
-    cy.visit('https://127.0.0.1:5173/modify');
+    cy.visit('https://127.0.0.1:5173/items');
+    cy.get("button[data-cy=addItem]").click();
 });
 
 When('I fill in the item details', () => {
@@ -19,7 +20,7 @@ When('I fill in the item details', () => {
 });
 
 When('I submit the item form', () => {
-    cy.get("button#add-item").click();
+    cy.get("button[data-cy=addItem]").click();
 });
 
 Then('the new item should be visible on the "Items" page', () => {

@@ -1,7 +1,7 @@
 <template>
   <br>
   <h2>Here is our list of items: </h2>
-  <button class="btn btn-primary btn-wide " @click="addItemButton">Add Item</button>
+  <button class="btn btn-primary btn-wide " @click="addItemButton" data-cy="addItem">Add Item</button>
   <div>
     <table class="table table-zebra table-compact">
       <thead>
@@ -35,7 +35,7 @@
           </button>
         </td>
         <td>
-          <button id="delete-item" class="btn btn-primary" @click="deleteItem(item.id)">
+          <button id="delete-item" class="btn btn-primary" @click="deleteItem(item.id)" data-cy="delete">
             Delete
           </button>
         </td>
@@ -69,7 +69,7 @@ export default {
     newItem: '',
   },
   created() {
-    $http.get('/items').then(response => {
+    $http.get('/items', {}).then(response => {
       // Dispatch the deleteStore action
       store.dispatch('deleteStore');
       response.body.forEach(item => {
@@ -108,7 +108,7 @@ export default {
     },
     // add getRefilledForm method with data for the form fields and push to modify page
     getRefilledForm(id, name, description, image) {
-      $http.get(`/items?id=${id}&name=${name}&description=${description}&image=${image}`).then(response => {
+      $http.get(`/items?id=${id}&name=${name}&description=${description}&image=${image}`, {}).then(response => {
         this.updateItemInStore(response.body); // Invoke the 'updateItemInStore' action with the updated item data
         this.$router.push({path: '/modify', query: {id: id, name: name, description: description, image: image}})
       })
@@ -121,7 +121,7 @@ export default {
         $http.delete(`/items?id=${id}`).then(response => {
           if (response.ok) {
             // Refresh the list of items
-            $http.get('/items').then(response => {
+            $http.get('/items', {}).then(response => {
               console.log(response)
               if (response.ok) {
                 console.log('Item deleted')

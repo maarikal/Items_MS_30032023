@@ -1,4 +1,4 @@
-import {NextFunction, Response} from "express";
+import express, {NextFunction, Response} from "express";
 import {PrismaClient} from '@prisma/client';
 import {IRequestWithSession} from 'function.d';
 
@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 // check if authorization header is present (5bi)
 async function authorizeRequest(req: IRequestWithSession, res: Response, next: NextFunction) {
     // check if authorization header is present (5bi)
+    console.log("auth: ", req.headers.authorization)
     if (!req.headers.authorization) {
         return res.status(401).send('Authorization header is missing')
     }
@@ -46,5 +47,27 @@ async function authorizeRequest(req: IRequestWithSession, res: Response, next: N
 
     next()
 }
+
+export const verifySession = async (
+    req: IRequestWithSession,
+    res: express.Response,
+    next: express.NextFunction
+) => {
+    const sessionId = req.headers.authorization;
+    console.log('sessionId:', sessionId);
+    if (!sessionId) {
+        return res.status(401).send('Unauthorized');
+    }
+    const session = await prisma.session.findUnique({
+        where: {id: sessionId.substring(7)},
+        select: {userId: true},
+    });
+    console.log('session:', session);
+    if (!session || !session.userId) {
+        return res.status(401).send('Unauthorized');
+    }
+    req.userId = {id: session.userId};
+    next();
+};
 
 export default authorizeRequest;
