@@ -12,11 +12,11 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(item, index) in item" key="item.id">
+      <tr v-for="(data, index) in data" key="data.id">
         <td>{{ index + 1 }}</td>
-        <td>{{ item.info }}</td>
-        <td>{{ action }}</td>
-        <td> {{ timestamp }}</td>
+        <td>{{ data.item }}</td>
+        <td>{{ data }}</td>
+        <td> {{}}</td>
       </tr>
       </tbody>
     </table>
@@ -31,15 +31,22 @@ import {$http} from '../utils/http'
 export default {
   data() {
     return {
-      item: '',
+      info: '',
+      level: 'info',
+      message: '',
       action: '',
       timestamp: '',
+      item: '',
     }
   },
+
   methods: {
     async getLog() {
       const response = await $http.get('/logs', {})
-      this.item = response.data
+      // get all data from log.file from backend
+      this.data = response.body.data
+      // give me level entries from log.file from backend
+      console.log('Log.vue', response.body.data)
     },
   },
   mounted() {
