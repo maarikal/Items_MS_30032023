@@ -14,7 +14,6 @@ const router = express.Router();
 import {OAuth2Client} from 'google-auth-library';
 
 const googleOAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-//const googleOAuth2Client = new OAuth2Client('668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com');
 // Prisma
 import {PrismaClient} from '@prisma/client';
 
@@ -86,7 +85,6 @@ async function getDataFromGoogleJwt(token: string) {
     try {
         const ticket = await googleOAuth2Client.verifyIdToken({
             idToken: token,
-            //audience: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
             audience: process.env.GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();

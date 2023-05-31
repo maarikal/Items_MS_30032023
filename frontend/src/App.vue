@@ -43,9 +43,6 @@ export default {
   },
   created() {
     this.checkLoggedIn()
-    //console.log('App.vue, loggedIn: ', this.loggedIn)
-    //console.log('Problm araises when another view is mounted after user action. loggedIn has to be updated before new view is mounted. So the created() has to be used. But used emit instead')
-
   },
   async mounted() {
     // Define socket and attach it to our data object

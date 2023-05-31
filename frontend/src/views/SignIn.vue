@@ -3,8 +3,6 @@
 import {$http} from '../utils/http'
 import '../../googleGSI.js'
 
-
-
 export default {
   // If the listener is intended to be a component custom event listener only, declare it using the "emits" option.
   emits: ['loggedInChange'], // Declare the emitted event
@@ -15,15 +13,13 @@ export default {
       sessionId: '',
     }
   },
-  created() {
-    // Google Sign In (GSI) starts here
-    window.onload = function () {
+  mounted() {
+    // Initialize the Google Sign-In client
+    window.onload = () => {
       google.accounts.id.initialize({
         client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
-        callback: handleCredentialResponse
+        callback: this.handleCredentialResponse,
       });
-      // Google prompt
-      // google.accounts.id.prompt();
 
       google.accounts.id.renderButton(
           document.getElementById('signInDiv'),
@@ -33,10 +29,11 @@ export default {
             text: 'long',
             type: 'standard'
           }
-      )
+      );
     };
-
-    const handleCredentialResponse = (response) => {
+  },
+  methods: {
+    handleCredentialResponse(response) {
       console.log('handleCredentialResponse', response);
 
       // Send the response to the backend
@@ -45,26 +42,22 @@ export default {
             token: response.credential,
           })
           .then((response) => {
-            // Save to localStorage (4a)
-            const sessionId = response.body.sessionId
-            localStorage.setItem('sessionId', sessionId)
-            console.log('signIn.vue', sessionId)
+            // Save to localStorage
+            const sessionId = response.body.sessionId;
+            localStorage.setItem('sessionId', sessionId);
+            console.log('signIn.vue', sessionId);
 
             // Share loggedIn state with parent component
-            // Set the loggedIn property to true
-            this.loggedIn = true
-            // Emit the 'loggedInChange' event to notify the parent component
-            this.$emit('loggedInChange', this.loggedIn)
+            this.loggedIn = true;
+            this.$emit('loggedInChange', this.loggedIn);
 
             // Redirect to list of items page
-            this.$router.push('/items')
+            this.$router.push('/items');
           })
           .catch((error) => {
             console.error(error);
           });
-    };
-  },
-  methods: {
+    },
     signIn() {
 
       // Send a POST request to the backend
@@ -87,7 +80,7 @@ export default {
         this.$router.push('/items')
       })
     },
-  }
+  },
 }
 </script>
 
