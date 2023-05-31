@@ -3,50 +3,7 @@
 import {$http} from '../utils/http'
 import '../../googleGSI.js'
 
-// Google Sign In (GSI) starts here
-window.onload = function () {
-  google.accounts.id.initialize({
-    client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
-    callback: handleCredentialResponse
-  });
-  // Google prompt
-  // google.accounts.id.prompt();
 
-  google.accounts.id.renderButton(
-      document.getElementById('signInDiv'),
-      {
-        theme: 'filled_blue',
-        size: 'large',
-        text: 'long',
-        type: 'standard'
-      }
-  )
-};
-
-function handleCredentialResponse(response) {
-  // Did we get here?
-  console.log('handleCredentialResponse', response);
-
-  // Send the response to the backend
-  $http.post('/oAuth2Login', {
-    token: response.credential,
-  }).then(response => {
-    // Save to localStorage (4a)
-    const sessionId = response.body.sessionId
-    localStorage.setItem('sessionId', sessionId)
-    console.log('signIn.vue', sessionId)
-
-    // Share loggedIn state with parent component
-    // Set the loggedIn property to true
-    this.loggedIn = true
-    // Emit the 'loggedInChange' event to notify the parent component
-    this.$emit('loggedInChange', this.loggedIn)
-
-    // Redirect to list of items page
-    this.$router.push('/items')
-  })
-}
-// GSI ends here
 
 export default {
   // If the listener is intended to be a component custom event listener only, declare it using the "emits" option.
@@ -57,6 +14,55 @@ export default {
       signInPassword: '',
       sessionId: '',
     }
+  },
+  created() {
+    // Google Sign In (GSI) starts here
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
+        callback: handleCredentialResponse
+      });
+      // Google prompt
+      // google.accounts.id.prompt();
+
+      google.accounts.id.renderButton(
+          document.getElementById('signInDiv'),
+          {
+            theme: 'filled_blue',
+            size: 'large',
+            text: 'long',
+            type: 'standard'
+          }
+      )
+    };
+
+    const handleCredentialResponse = (response) => {
+      console.log('handleCredentialResponse', response);
+
+      // Send the response to the backend
+      $http
+          .post('/oAuth2Login', {
+            token: response.credential,
+          })
+          .then((response) => {
+            // Save to localStorage (4a)
+            const sessionId = response.body.sessionId
+            localStorage.setItem('sessionId', sessionId)
+            console.log('signIn.vue', sessionId)
+
+            // Share loggedIn state with parent component
+            // Set the loggedIn property to true
+            this.loggedIn = true
+            // Emit the 'loggedInChange' event to notify the parent component
+            this.$emit('loggedInChange', this.loggedIn)
+
+            // Redirect to list of items page
+            this.$router.push('/items')
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    };
   },
   methods: {
     signIn() {

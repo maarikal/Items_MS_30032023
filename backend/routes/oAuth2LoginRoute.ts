@@ -5,6 +5,13 @@ const router = express.Router();
 import {OAuth2Client} from 'google-auth-library';
 //const googleOAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const googleOAuth2Client = new OAuth2Client('668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com');
+// Prisma
+import {PrismaClient} from '@prisma/client';
+
+const prisma = new PrismaClient();
+// uuid
+import {v4 as uuid} from 'uuid';
+import bcrypt from "bcrypt";
 
 // Google sign-in route
 /*import express, {Request, Response} from "express";*/
@@ -13,25 +20,62 @@ const googleOAuth2Client = new OAuth2Client('668250301704-q7j4t8tnkmk88j3d6jsrku
 router.post(
     '/',
     async (req: Request, res: Response) => {
-        // Did we get here?
-        console.log("oAuth2Login", `req.body.token: ${req.body.token}`);
-        const sessionId = req.body.token;
-        const payload = await getDataFromGoogleJwt(sessionId);
-        // console log payload
-        console.log("oAuth2Login", `payload: ${payload}`);
-        if (payload) {
-            res.status(200).send(payload);
-        } else {
-            res.status(401).send('Unauthorized');
+        try {
+            const token = req.body.token;
+            const payload = await getDataFromGoogleJwt(token);
+
+            // If the payload exists,
+            // take the email from the payload and check if user with this email exists in the database
+            // If the user exists, create session for the user
+            // If the user exists, and the session exists, return session id
+            // If the user does not exist, create user and session for the user
+            // Return session id
+            // If the payload does not exist, return unauthorized
+            if (payload) {
+                const userEmail = await prisma.user.findUnique({
+                    where: {email: payload.email},
+                });
+                if (userEmail) {
+                    // If the user exists, and the session exists, return session id
+                    const session = await prisma.session.findUnique({
+                        where: {userId: userEmail.id},
+                    });
+                    if (session) {
+                        return res.status(201).send({sessionId: session.id});
+                    } else {
+                        const session = await prisma.session.create({
+                            data: {userId: userEmail.id, id: uuid()}
+                        });
+                        return res.status(201).send({sessionId: session.id});
+                    }
+                } else {
+                    const hashedPassword = await bcrypt.hash(payload.sub, 10);
+                    const user = await prisma.user.create({
+                        data: {
+                            email: payload.email,
+                            password: hashedPassword,
+                        }
+                    });
+                    const session = await prisma.session.create({
+                        data: {userId: user.id, id: uuid()}
+                    });
+                    return res.status(201).send({sessionId: session.id});
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send('Internal Server Error');
         }
-    })
+    }
+);
+
 
 // middleware to verify the JWT token
 // function getDataFromGoogleJwt
-async function getDataFromGoogleJwt(sessionId: string) {
+async function getDataFromGoogleJwt(token: string) {
     try {
         const ticket = await googleOAuth2Client.verifyIdToken({
-            idToken: sessionId,
+            idToken: token,
             audience: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
         });
         const payload = ticket.getPayload();

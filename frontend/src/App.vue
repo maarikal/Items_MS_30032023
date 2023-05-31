@@ -112,7 +112,21 @@ export default {
     logout() {
       localStorage.removeItem('sessionId')
       this.loggedIn = false
+
+      // Send delete session request to server /sessions
+      /*      $http.delete('/sessions')
+              .then(response => {
+                console.log('response: ', response)
+                if (response.ok) {
+                  this.$router.push('/')
+                }
+              })
+              .catch(error => {
+                console.log('error: ', error)
+              })*/
+
       this.$router.push('/')
+
     },
     // ws support starts here
     waitForOpenConnection: function() {
