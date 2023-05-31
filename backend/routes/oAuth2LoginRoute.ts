@@ -1,10 +1,20 @@
+// Websocket
+// https://fjolt.com/article/vue-how-to-set-up-a-websocket-server
+// https://medium.com/developer-rants/implementing-https-and-wss-support-in-express-with-typescript-of-course-f36006c77bab
+// oAuth2 Google
+// https://developers.google.com/identity/gsi/web/reference/js-reference
+// https://codevoweb.com/google-oauth-authentication-vue-and-node/
+// https://yobaji.github.io/vue3-google-login/#using-google-sdk
+// https://github.com/yobaji/vue3-google-login/
+
 import express, {NextFunction, Request, Response} from 'express';
 
 const router = express.Router();
 // Google sign-in
 import {OAuth2Client} from 'google-auth-library';
-//const googleOAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const googleOAuth2Client = new OAuth2Client('668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com');
+
+const googleOAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+//const googleOAuth2Client = new OAuth2Client('668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com');
 // Prisma
 import {PrismaClient} from '@prisma/client';
 
@@ -76,7 +86,8 @@ async function getDataFromGoogleJwt(token: string) {
     try {
         const ticket = await googleOAuth2Client.verifyIdToken({
             idToken: token,
-            audience: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
+            //audience: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
+            audience: process.env.GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();
         return payload;
