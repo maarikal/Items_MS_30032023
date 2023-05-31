@@ -30,6 +30,7 @@ items, add new items (if signed in), and delete existing items (if signed in).
 3. Add `https://localhost:5173/oAuth2Login` as an authorized redirect URI
 4. Add `https://localhost:5173` as an authorized JavaScript origin
 5. Copy the client ID into the backend environment file
+6.
 
 ### Documentation
 
