@@ -62,6 +62,7 @@ export default {
       // We can parse the data we know to be JSON, and then check it for data attributes
       let parsedMessage = JSON.parse(event.data);
       // If those data attributes exist, we can then console log or show data to the user on their web page.
+      //console.log(parsedMessage);
       if (typeof parsedMessage.message !== "undefined") {
         this.message = parsedMessage.message;
         console.log('We have received a message from the server!')
@@ -69,6 +70,7 @@ export default {
 
       // Handle ws message type 'addItem'
       const data = JSON.parse(event.data);
+      //console.log('Parsed WebSocket data:', data);
       if (data.type === 'addItem') {
         console.log('Received WebSocket message type "addItem"');
         // Add the new item to dom
@@ -109,10 +111,21 @@ export default {
     logout() {
       localStorage.removeItem('sessionId')
       this.loggedIn = false
-      // Notify backend to delete session
-      $http.delete('/sessions/' + this.sessionId)
+
+      // Send delete session request to server /sessions
+      /*      $http.delete('/sessions')
+              .then(response => {
+                console.log('response: ', response)
+                if (response.ok) {
+                  this.$router.push('/')
+                }
+              })
+              .catch(error => {
+                console.log('error: ', error)
+              })*/
 
       this.$router.push('/')
+
     },
     // ws support starts here
     waitForOpenConnection: function () {

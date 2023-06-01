@@ -1,6 +1,7 @@
 <!-- src/views/SignIn.vue -->
 <script>
 import {$http} from '../utils/http'
+import '../../googleGSI.js'
 
 export default {
   // If the listener is intended to be a component custom event listener only, declare it using the "emits" option.
@@ -12,7 +13,51 @@ export default {
       sessionId: '',
     }
   },
+  mounted() {
+    // Initialize the Google Sign-In client
+    window.onload = () => {
+      google.accounts.id.initialize({
+        client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
+        callback: this.handleCredentialResponse,
+      });
+
+      google.accounts.id.renderButton(
+          document.getElementById('signInDiv'),
+          {
+            theme: 'filled_blue',
+            size: 'large',
+            text: 'long',
+            type: 'standard'
+          }
+      );
+    };
+  },
   methods: {
+    handleCredentialResponse(response) {
+      console.log('handleCredentialResponse', response);
+
+      // Send the response to the backend
+      $http
+          .post('/oAuth2Login', {
+            token: response.credential,
+          })
+          .then((response) => {
+            // Save to localStorage
+            const sessionId = response.body.sessionId;
+            localStorage.setItem('sessionId', sessionId);
+            console.log('signIn.vue', sessionId);
+
+            // Share loggedIn state with parent component
+            this.loggedIn = true;
+            this.$emit('loggedInChange', this.loggedIn);
+
+            // Redirect to list of items page
+            this.$router.push('/items');
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    },
     signIn() {
 
       // Send a POST request to the backend
@@ -35,13 +80,19 @@ export default {
         this.$router.push('/items')
       })
     },
-  }
+  },
 }
 </script>
 
 <template>
   <div>
     <h1>Sign In</h1>
+    <div class="h-30">&nbsp;</div>
+    <!-- Google Sign In -->
+    <div id="signInDiv"></div>
+    <div class="h-30">&nbsp;</div>
+    <div class="h-30">or sign in with e-mail and password</div>
+    <div class="h-30">&nbsp;</div>
 
     <!-- Email -->
     <div class="form-control w-full max-w-xs">

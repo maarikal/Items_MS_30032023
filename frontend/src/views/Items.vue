@@ -58,6 +58,7 @@ const sessionId = localStorage.getItem('sessionId')
 export default {
   data() {
     return {
+      items: [],
       name: '',
       description: '',
       image: '',

@@ -26,6 +26,14 @@ items, add new items (if signed in), and delete existing items (if signed in).
 15. Go to `https://localhost:3000` and accept the self-signed certificate
 16. Go to `https://localhost:5173` to see the app
 
+### For oAuth2
+
+1. Create a new app in the [Google Developer Console](https://console.developers.google.com/)
+2. Create a new OAuth 2.0 Client ID
+3. Add `https://localhost:5173/oAuth2Login` as an authorized redirect URI
+4. Add `https://localhost:5173` as an authorized JavaScript origin
+5. Copy the client ID into the backend environment file
+
 ### Documentation
 
 The API documentation is at [https://localhost:3000/docs](https://localhost:3000/docs)

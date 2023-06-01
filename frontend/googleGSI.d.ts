@@ -1,0 +1,1 @@
+declare module 'https://accounts.google.com/gsi/client';

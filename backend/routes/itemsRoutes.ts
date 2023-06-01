@@ -95,7 +95,6 @@ router.put(
                         )
                     )
                 );
-
             // Return item
             return res.status(200).send(item);
         }

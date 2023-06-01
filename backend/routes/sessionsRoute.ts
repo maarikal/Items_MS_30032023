@@ -66,13 +66,23 @@ router.post(
 
 
 // DELETE /sessions end-point (5c)
-router.delete('/', authorizeRequest, (req, res) => {
-    console.log(1);
-    // Log user logout
-    logger.info('User logged out', {user: req.body.userId});
-
-    res.status(204).send();
+router.delete('/', authorizeRequest, async (req, res) => {
+    // Did we get heere?
+    console.log('delete sessions');
+    try {
+        // Delete session from database
+        const deletedSession = await prisma.session.delete({
+            where: {id: req.body.sessionId}
+        });
+        console.log(deletedSession);
+        // Log user logout
+        logger.info('User logged out', {user: req.body.userId});
+        // Send response
+        return res.status(204).send();
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Internal Server Error');
+    }
 });
-
 
 export default router;
