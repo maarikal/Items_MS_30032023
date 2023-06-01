@@ -3,7 +3,6 @@ import fs from "fs";
 
 const router = express.Router();
 
-
 // Routes
 router.get(
     '/',
