@@ -16,7 +16,7 @@ const prefixStream = (prefix) => {
 
 const installDependencies = (name, path) => {
     return new Promise((resolve, reject) => {
-        const install = exec(`npm ci --prefix ${path}`, (error, stdout, stderr) => {
+        const install = exec(`npm i --prefix ${path}`, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error installing ${name}: ${error}`);
                 reject(error);
