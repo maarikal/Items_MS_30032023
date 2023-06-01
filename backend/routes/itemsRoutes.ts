@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import {verifySession} from "../functions";
+import authorizeRequest from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -23,6 +23,7 @@ router.get(
 
 router.post(
     '/',
+    authorizeRequest,
     handleErrors(async (req: Request, res: Response) => {
         // Save item to database using Prisma
         const item = await prisma.item.create({

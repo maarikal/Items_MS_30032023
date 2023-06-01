@@ -23,3 +23,33 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('createUser', (user) => {
+    try {
+        cy.request({
+            method: 'POST',
+            url: 'https://localhost:3000/users',
+            body: user,
+            failOnStatusCode: false
+        }).then((response) => {
+            // Check if the user was not created
+            if (response.status !== 201 && response.status !== 409) {
+                throw new Error('User was not created');
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+Cypress.Commands.add('signIn', (user) => {
+    cy.request({
+        method: 'POST',
+        url: 'https://localhost:3000/sessions',
+        body: user
+    }).then((response) => {
+        if(response.status !== 201){
+            throw new Error('User was not signed in');
+        }
+        window.localStorage.setItem('sessionId', response.body.sessionId);
+    });
+})
