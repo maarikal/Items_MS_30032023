@@ -12,11 +12,11 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(data, index) in data" key="data.id">
+      <tr v-for="(log, index) in logs" :key="index">
         <td>{{ index + 1 }}</td>
-        <td>{{ data.item }}</td>
-        <td>{{ data }}</td>
-        <td> {{}}</td>
+        <td>{{ log.item }}</td>
+        <td>{{ log.message }}</td>
+        <td>{{ log.timestamp }}</td>
       </tr>
       </tbody>
     </table>
@@ -37,16 +37,17 @@ export default {
       action: '',
       timestamp: '',
       item: '',
+      logs: [],
+      data: [],
     }
   },
 
   methods: {
     async getLog() {
       const response = await $http.get('/logs', {})
-      // get all data from log.file from backend
-      this.data = response.body.data
-      // give me level entries from log.file from backend
-      console.log('Log.vue', response.body.data)
+      this.logs = response.body.logs
+      console.log('Log.vue', this.logs)
+      console.log('Log.vue2', response.body.logs)
     },
   },
   mounted() {
