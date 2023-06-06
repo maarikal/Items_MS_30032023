@@ -12,7 +12,7 @@ const router = express.Router();
 // Routes
 router.get(
     '/',
-    //verifySession,
+    authorizeRequest,
     handleErrors(async (req: IRequestWithSession, res: Response) => {
         // Get all items from database using Prisma
         const items = await prisma.item.findMany();
@@ -23,7 +23,6 @@ router.get(
 
 router.post(
     '/',
-    authorizeRequest,
     handleErrors(async (req: Request, res: Response) => {
         // Save item to database using Prisma
         const item = await prisma.item.create({

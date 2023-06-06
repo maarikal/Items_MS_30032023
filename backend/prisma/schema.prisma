@@ -28,12 +28,4 @@ model Session {
   userId   Int @unique
 }
 
-model Log {
-  id       Int     @id @default(autoincrement())
-  userId   Int
-  itemId   Int
-  action   String
-  createdAt DateTime @default(now())
-}
-
 

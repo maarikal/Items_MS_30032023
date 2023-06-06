@@ -1,7 +1,10 @@
 import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
 
-Given("that I am a logged in user", () => {
-    localStorage.setItem('sessionId', 'bogusSessionIdForTesting');
+let testUser = {email: 'testuser@gmail.com', password: 'password'}
+
+Given('that I am a logged in user', () => {
+    cy.createUser(testUser);
+    cy.signIn(testUser);
 });
 
 When("I visit the table of items page", () => {

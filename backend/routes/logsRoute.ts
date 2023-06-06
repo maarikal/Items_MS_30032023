@@ -16,6 +16,7 @@ router.get(
                 // Perform any necessary transformations on each log entry
                 const transformedLog = {
                     item: parsedLine.item,
+                    user: parsedLine.user,
                     message: parsedLine.message.toUpperCase(),
                     timestamp: parsedLine.timestamp
                 };

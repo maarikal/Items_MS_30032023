@@ -21,6 +21,7 @@ const prisma = new PrismaClient();
 // uuid
 import {v4 as uuid} from 'uuid';
 import bcrypt from "bcrypt";
+import logger from "../logger";
 
 // Google sign-in route
 /*import express, {Request, Response} from "express";*/
@@ -55,6 +56,7 @@ router.post(
                         const session = await prisma.session.create({
                             data: {userId: userEmail.id, id: uuid()}
                         });
+                        logger.info('User logged in', {user: userEmail});
                         return res.status(201).send({sessionId: session.id});
                     }
                 } else {

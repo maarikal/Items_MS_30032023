@@ -4,7 +4,7 @@ Feature: Item Update
   So that I can keep my information up to date
 
   Scenario: User updates an item
-    Given I am logged in as a registered user
+    Given that I am a logged in user
     When I am on the "Items" page
     And I click on the "Edit" button next to the item I want to update
     And I update the item's details
