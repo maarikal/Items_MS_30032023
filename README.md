@@ -31,11 +31,38 @@ items, add new items (if signed in), and delete existing items (if signed in).
 16. Go to `https://localhost:5173` to see the app
 
 ### For oAuth2
-1. Create a new app in the [Google Developer Console](https://console.developers.google.com/)
-2. Create a new OAuth 2.0 Client ID
-3. Add `https://localhost:5173/oAuth2Login` as an authorized redirect URI
-4. Add `https://localhost:5173` as an authorized JavaScript origin
-5. Copy your client ID into the backend environment file
+1. Go to the [Google Developer Console](https://console.developers.google.com/) and sign in with your Google account.
+2. Create a new project by clicking on the project dropdown menu at the top of the page and selecting "New Project".
+   Enter a name for your project and click on the "Create" button.
+3. Once your project is created, make sure it is selected from the project dropdown menu at the top of the page.
+4. In the left sidebar or left hamburger menu, click on the "Credentials" menu option in the APIs & Services section.
+5. On the Credentials page, click on the "Create Credentials" button and select "OAuth client ID" from the dropdown
+   menu.
+6. Click on the "Configure consent screen" button.
+7. On the "OAuth consent screen" page, select "External" and click on the "Create" button.
+8. Enter a name for your app.
+9. Enter User support email and Developer contact information.
+10. Click on the "Save and Continue" button.
+11. Click on the "Add or Remove Scopes" button.
+12. Select the "email" and "profile" scopes and click on the "Update" button.
+13. Click on the "Save and Continue" button.
+14. Under Test users, click on the "Add Users" button.
+15. Enter your test user's email addresses separated by commas and click on the "Add" button. Don't add your own email
+    address.
+16. Click on the "Save and Continue" button.
+17. Click on the "Back to Dashboard" button.
+18. Click on the "Credentials" menu option in the left sidebar or left hamburger menu.
+19. On the Credentials page, click on the "Create Credentials" button and select "OAuth client ID" from the dropdown
+    menu.
+20. Select "Web application" as the Application type.
+21. Enter a name for your app.
+22. Under Authorized JavaScript origins, click on the "Add URI" button.
+23. Enter https://localhost:5173.
+24. Under Authorized redirect URIs, click on the "Add URI" button.
+25. Enter https://localhost:5173/oAuth2Login.
+26. Click on the "Create" button.
+27. Copy your client ID from the popup window.
+28. Paste your client ID into the backend environment file (/backend/.env).
 
 ### Documentation
 The API documentation is at [https://localhost:3000/docs](https://localhost:3000/docs)

@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import {verifySession} from "../functions";
+import authorizeRequest from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -12,7 +12,7 @@ const router = express.Router();
 // Routes
 router.get(
     '/',
-    //verifySession,
+    authorizeRequest,
     handleErrors(async (req: IRequestWithSession, res: Response) => {
         // Get all items from database using Prisma
         const items = await prisma.item.findMany();

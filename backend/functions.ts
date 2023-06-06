@@ -1,6 +1,6 @@
 import express, {NextFunction, Response} from "express";
 import {PrismaClient} from '@prisma/client';
-import {IRequestWithSession} from 'function.d';
+import {IRequestWithSession} from 'function';
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,7 @@ async function authorizeRequest(req: IRequestWithSession, res: Response, next: N
     // check if authorization header is present (5bi)
     console.log("auth: ", req.headers.authorization)
     if (!req.headers.authorization) {
-        return res.status(401).send('Authorization header is missing')
+        return res.status(401).send('Unauthorized')
     }
 
     // check if authorization header is in Bearer XXX format (5bii)

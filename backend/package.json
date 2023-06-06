@@ -23,6 +23,7 @@
     "sax": "^1.2.4",
     "swagger-ui-express": "^4.6.2",
     "uuid": "^9.0.0",
+    "vite-project": "file:..",
     "winston": "^3.9.0",
     "yamljs": "^0.3.0"
   },

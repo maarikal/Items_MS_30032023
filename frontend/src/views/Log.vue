@@ -6,17 +6,19 @@
       <thead>
       <tr>
         <th></th>
-        <th>Item</th>
         <th>Action</th>
         <th>Timestamp</th>
+        <th>Name</th>
+
       </tr>
       </thead>
       <tbody>
       <tr v-for="(log, index) in logs" :key="index">
         <td>{{ index + 1 }}</td>
-        <td>{{ log.item }}</td>
         <td>{{ log.message }}</td>
         <td>{{ log.timestamp }}</td>
+        <td>{{ log.item || log.user }}</td>
+
       </tr>
       </tbody>
     </table>
@@ -31,14 +33,13 @@ import {$http} from '../utils/http'
 export default {
   data() {
     return {
-      info: '',
-      level: 'info',
       message: '',
       action: '',
       timestamp: '',
       item: '',
       logs: [],
       data: [],
+      user: '',
     }
   },
 
@@ -46,8 +47,6 @@ export default {
     async getLog() {
       const response = await $http.get('/logs', {})
       this.logs = response.body.logs
-      console.log('Log.vue', this.logs)
-      console.log('Log.vue2', response.body.logs)
     },
   },
   mounted() {

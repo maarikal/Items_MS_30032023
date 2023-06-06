@@ -19,7 +19,6 @@
 
 <script>
 import {mapState, mapActions} from 'vuex';
-import store from "./store/itemsStore.js";
 
 // get sessionId from localStorage (4c)
 import {$http} from "./utils/http.ts";
@@ -109,7 +108,11 @@ export default {
       }
     },
     logout() {
-      localStorage.removeItem('sessionId')
+      $http.delete('/sessions').then(response => {
+        console.log("frontendi delete message:", response)
+      }).catch(error => {
+        console.log(error)
+      })
       this.loggedIn = false
       this.$router.push('/')
     },

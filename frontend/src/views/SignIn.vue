@@ -15,22 +15,20 @@ export default {
   },
   mounted() {
     // Initialize the Google Sign-In client
-    window.onload = () => {
-      google.accounts.id.initialize({
-        client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
-        callback: this.handleCredentialResponse,
-      });
+    google.accounts.id.initialize({
+      client_id: '668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com',
+      callback: this.handleCredentialResponse,
+    });
 
-      google.accounts.id.renderButton(
-          document.getElementById('signInDiv'),
-          {
-            theme: 'filled_blue',
-            size: 'large',
-            text: 'long',
-            type: 'standard'
-          }
-      );
-    };
+    google.accounts.id.renderButton(
+        document.getElementById('signInDiv'),
+        {
+          theme: 'filled_blue',
+          size: 'large',
+          text: 'long',
+          type: 'standard'
+        }
+    );
   },
   methods: {
     handleCredentialResponse(response) {
