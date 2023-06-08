@@ -31,6 +31,12 @@ paths:
                     description: some text
                     image: a picture
                     name: new namet
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item returned:
+                  value: "<Item>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>"
           description: Items returned
         '401':
           content:
@@ -118,6 +124,9 @@ paths:
           text/xml:
             schema:
               $ref: '#/components/schemas/User'
+            examples:
+              PostUserRequestBody_xml:
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<User>\n\t<email>test@test.ee</email>\n\t<password>qwerty12</password>\n</User>"
         required: true
       tags:
         - Users
@@ -130,7 +139,8 @@ paths:
               examples:
                 User returned:
                   value:
-                    User: Returned
+                    email: some email
+                    password: some password
             text/xml:
               schema:
                 $ref: '#/components/schemas/User'
@@ -211,6 +221,12 @@ paths:
                 value:
                   email: test1@test.ee
                   password: qwerty123
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              PostUsersRequestBody:
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<User>\n\t<email>test@test.ee</email>\n\t<password>qwerty12</password>\n</User>"
         required: true
       tags:
         - Users
@@ -223,7 +239,8 @@ paths:
               examples:
                 Email is valid:
                   value:
-                    User: Email is valid
+                    email: some email
+                    password: password
           description: Email is valid
         '201':
           content:
@@ -233,7 +250,8 @@ paths:
               examples:
                 User is created:
                   value:
-                    User: Created
+                    email: email
+                    password: password
           description: User is created
         '400':
           content:
@@ -425,89 +443,6 @@ paths:
       The REST endpoint/path used to get, update, and delete single instances of an `items`.  This path
       contains `GET`, `PUT`, and `DELETE` operations used to perform the get, update, and delete tasks,
       respectively.
-    put:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Item'
-            examples:
-              ' PutItemsRequestBody':
-                value:
-                  name: new bird
-                  description: it is green and small
-                  image: >-
-                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
-          text/xml:
-            schema:
-              $ref: '#/components/schemas/Item'
-        required: true
-      tags:
-        - Items
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Item:
-                  value:
-                    Item: Item returned
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Item returned:
-                  value: <text>Item returned</text>
-          description: Return item
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Item created:
-                  value:
-                    Item: Item created
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Item created:
-                  value: <text>Item created</text>
-          description: Item created
-        '202':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Response:
-                  value:
-                    Item: Successful response
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Successful response:
-                  value: <text>Successful response</text>
-          description: Successful response.
-        '500':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Internal Server Error:
-                  value:
-                    Error: Internal Server Error
-          description: Internal Server Error
-      security:
-        - Bearer: [ ]
-      operationId: updateitem
-      summary: Update a item
-      description: Updates an existing item.
     post:
       requestBody:
         description: Added item information.
@@ -530,7 +465,9 @@ paths:
               examples:
                 Created:
                   value:
-                    Item: Item has created
+                    description: some text
+                    image: one image
+                    name: some name
             text/xml:
               schema:
                 $ref: '#/components/schemas/Item'
@@ -573,16 +510,6 @@ paths:
       tags:
         - Items
       responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Item deleted:
-                  value:
-                    Item: Deleted
-          description: Return item
         '204':
           content:
             application/json:
@@ -598,6 +525,77 @@ paths:
       operationId: deleteitems
       summary: Delete a item
       description: Deletes an existing `items`.
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+            examples:
+              ' PutItemsRequestBody':
+                value:
+                  name: new bird
+                  description: it is green and small
+                  image: >-
+                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      tags:
+        - Items
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item created:
+                  value:
+                    description: some text
+                    image: some image
+                    name: some name
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item created:
+                  value: <text>Item created</text>
+          description: Item created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Response:
+                  value:
+                    description: some text
+                    image: some image
+                    name: some name
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Successful response:
+                  value: <text>Successful response</text>
+          description: Successful response.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    Error: Internal Server Error
+          description: Internal Server Error
+      security:
+        - Bearer: [ ]
+      operationId: updateitem
+      summary: Update a item
+      description: Updates an existing item.
     parameters:
       - name: itemsId
         description: A unique identifier for a `items`.
@@ -614,10 +612,11 @@ paths:
               $ref: '#/components/schemas/Session'
             examples:
               GoogleAuthRequestBody:
-                value:
-                  idToken: Bearer 0f054c4c-6402-4c35-a55f-2b235c6397a5
-                  audience: >-
-                    668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com
+                value: >-
+                  {"token":
+                  "eyJhbGciOiJSUzI1NiIsImtpZCI6IjYwODNkZDU5ODE2NzNmNjYxZmRlOWRhZTY0NmI2ZjAzODBhMDE0NWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODYyMjAwNDMsImF1ZCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExMTY5NzM3MTkzMDAzMTY4NzY1OSIsImhkIjoidm9jby5lZSIsImVtYWlsIjoibWFhcmlrYS5sdWtrQHZvY28uZWUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiNjY4MjUwMzAxNzA0LXE3ajR0OHRua21rODhqM2Q2anNya3VqdDc0MzExdW5iLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwibmFtZSI6Ik1hYXJpa2EgTHVrayIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRlVUkyNG9RRzlRNHdXd2hJNF9nQ2xzeXhHRC02cUlrdUQ0Wmd3bT1zOTYtYyIsImdpdmVuX25hbWUiOiJNYWFyaWthIiwiZmFtaWx5X25hbWUiOiJMdWtrIiwiaWF0IjoxNjg2MjIwMzQzLCJleHAiOjE2ODYyMjM5NDMsImp0aSI6IjRhYjA1MjlhNjRlMTJiYzBhZDc4NmM4N2JmMWE1NGNmNDliYzM5OTgifQ.glgcojKWzEaKAtqHpCc4B7aZqFBFFzCs29LJG9GJwj7SW8xVf1XJRkUfRrsUV5H0gNyMx_f3m3Pv1chPX5P-teVlDORHg9jh_zJ__rsGCHZqiaG9pC4cJJvVjWq6JThHzQOALIgMxgbc_hDCZuImeoGXQinSrJ31qbe7JMsyCv3_LIv0DRJ0yXjnmsu9vfMtUaRDZLS_6njlI_nQZU6M2rl0slGGyged7-oqWugPDxVh7nvgq55QKqejyfUKGsnf9FUHsHJa86s8xc-YuDxDrj62PvI0_WoU1IGRYO4OX0H6x336o1W9cakd-1WoNRTK89vaWrephKuof0aWYh9e-A"                        
+                  
+                  }
         required: true
       tags:
         - oAuth2Login
@@ -632,6 +631,16 @@ paths:
                   value:
                     Session: SessionId returned
           description: Returns sessionId
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request:
+                  value:
+                    Error: Bad Request
+          description: Bad Request
         '500':
           content:
             application/json:
@@ -652,6 +661,8 @@ paths:
         '200':
           content:
             application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
               examples:
                 Logs sent:
                   value:
