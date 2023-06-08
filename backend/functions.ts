@@ -1,6 +1,8 @@
-import express, {NextFunction, Response} from "express";
+import express, {NextFunction, Request, Response} from "express";
 import {PrismaClient} from '@prisma/client';
 import {IRequestWithSession} from 'function';
+import xml2js from 'xml2js';
+import itemsRoutes from "./routes/itemsRoutes";
 
 const prisma = new PrismaClient();
 
@@ -48,26 +50,50 @@ async function authorizeRequest(req: IRequestWithSession, res: Response, next: N
     next()
 }
 
-export const verifySession = async (
-    req: IRequestWithSession,
-    res: express.Response,
-    next: express.NextFunction
-) => {
-    const sessionId = req.headers.authorization;
-    console.log('sessionId:', sessionId);
-    if (!sessionId) {
-        return res.status(401).send('Unauthorized');
+function sendResponse(req: IRequestWithSession, res: Response, data: any) {
+    const acceptHeader = req.headers.accept || '';
+    if (acceptHeader === 'application/json') {
+        return res.status(201).json(data);
+    } else if (acceptHeader === 'text/html') {
+        return res.status(201).send(`<h1>${data.name}</h1><p>${data.description}</p>`);
+    } else if (acceptHeader === 'application/xml') {
+        const xml = `
+            <item>
+                <name>${data.name}</name>
+                <description>${data.description}</description>
+                <image>${data.image}</image>
+            </item>
+        `;
+        return res.status(201).send(xml);
+    } else {
+        return res.status(406).send('Not Acceptable');
     }
-    const session = await prisma.session.findUnique({
-        where: {id: sessionId.substring(7)},
-        select: {userId: true},
-    });
-    console.log('session:', session);
-    if (!session || !session.userId) {
-        return res.status(401).send('Unauthorized');
-    }
-    req.userId = {id: session.userId};
-    next();
+}
+
+
+export const xmlResponse = (res: Response, object: any, status: number) => {
+    const builder = new xml2js.Builder();
+    const xml = builder.buildObject(object);
+    res.set('Content-Type', 'application/xml');
+    res.status(status).send(xml);
 };
+
+export const isXMLHeader = (req: Request) => {
+    const acceptHeader = req.headers.accept || '';
+    //const items = prisma.item.findMany();
+    return acceptHeader.includes('application/xml') || acceptHeader.includes('text/xml');
+};
+
+export const sendRequest = (req: IRequestWithSession, res: Response, data: any, status: number) => {
+    if (req.headers.accept === 'text/xml') {
+
+        const convert = require('xml2js');
+        const options = {compact: true, ignoreComment: true, spaces: 4};
+        const xml = convert.json2xml(data, options);
+        return res.status(status).send(xml)
+    }
+    return res.status(status).json(data)
+}
+
 
 export default authorizeRequest;

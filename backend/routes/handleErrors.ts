@@ -1,6 +1,5 @@
 import {Request, Response, NextFunction} from 'express';
 
-// Define a type for route handlers
 type HandlerWithNext = (req: Request, res: Response, next: NextFunction) => Response | Promise<Response> | void;
 
 type HandlerWithoutNext = (req: Request, res: Response) => Response | Promise<Response> | void;

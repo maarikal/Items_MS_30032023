@@ -20,36 +20,28 @@ paths:
       tags:
         - Items
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Item'
               examples:
-                Item returned:
+                Items returned:
                   value:
-                    Item: Item returned
-          description: Returns items
-        '400':
+                    description: some text
+                    image: a picture
+                    name: new namet
+          description: Items returned
+        '401':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                Bad Request:
+                Unauthorized:
                   value:
-                    error: Bad Request
-          description: Bad Request
-        '409':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Conflict:
-                  value:
-                    error: Item already exists
-          description: Conflict
+                    error: Unauthorized
+          description: Unauthorized
       security:
         - Bearer: [ ]
       summary: Get all items
@@ -61,9 +53,19 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Item'
+            examples:
+              ' PostItemsRequestBody_json':
+                value:
+                  name: new bird
+                  description: it is green and small
+                  image: >-
+                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
           text/xml:
             schema:
               $ref: '#/components/schemas/Item'
+            examples:
+              PostItemsRequestBody_xml:
+                value: "<Item>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</Item>"
         required: true
       tags:
         - Items
@@ -76,14 +78,26 @@ paths:
               examples:
                 Item returned:
                   value:
-                    Item: Item returned
+                    description: some text
+                    image: returned item image
+                    name: returned item name
             text/xml:
               schema:
                 $ref: '#/components/schemas/Item'
               examples:
                 Item returned:
-                  value: "<text>Item returned</text>\r\n"
+                  value: "<Item>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>"
           description: Return item
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    Error: Internal Server Error
+          description: Internal Server Error
       security:
         - Bearer: [ ]
       operationId: createitems
@@ -96,6 +110,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
+            examples:
+              PostSessionsRequestBody:
+                value:
+                  email: test@test.ee
+                  password: qwerty123
           text/xml:
             schema:
               $ref: '#/components/schemas/User'
@@ -182,6 +201,17 @@ paths:
       summary: Create a new user
   /users/check-email:
     post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              PostSessionsRequestBody:
+                value:
+                  email: test1@test.ee
+                  password: qwerty123
+        required: true
       tags:
         - Users
       responses:
@@ -259,7 +289,7 @@ paths:
               examples:
                 Is Working:
                   value:
-                    error: works
+                    message: works
           description: OK
       summary: Get project load information
   /sessions:
@@ -269,9 +299,17 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
+            examples:
+              PostSessionsRequestBody:
+                value:
+                  email: test@test.ee
+                  password: qwerty123
           text/xml:
             schema:
               $ref: '#/components/schemas/User'
+            examples:
+              PostSessionsRequestBody:
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>"
         required: true
       tags:
         - Sessions
@@ -314,36 +352,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                Authorization missing:
-                  value:
-                    error: Authorization header is missing
-                Bearer:
-                  value:
-                    error: Authorization header is not in Bearer XXX format
                 Session not found:
                   value:
                     error: Session not found
                 User not found:
                   value:
                     error: User not found
-                Unauthorized:
-                  value:
-                    error: Unauthorized
             text/xml:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                Authorization missing:
-                  value: <text>Authorization header is missing</text>
-                Bearer:
-                  value: <text>Authorization header is not in Bearer XXX format</text>
                 Session not found:
                   value: <text>Session not found</text>
                 User not found:
                   value: <text>User not found</text>
-                Unauthorized:
-                  value: <text>Unauthorized</text>
-          description: Unauthorized
+          description: Session not found
       security:
         - Bearer: [ ]
       summary: Create a new session
@@ -408,6 +431,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Item'
+            examples:
+              ' PutItemsRequestBody':
+                value:
+                  name: new bird
+                  description: it is green and small
+                  image: >-
+                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
           text/xml:
             schema:
               $ref: '#/components/schemas/Item'
@@ -463,6 +493,16 @@ paths:
                 Successful response:
                   value: <text>Successful response</text>
           description: Successful response.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    Error: Internal Server Error
+          description: Internal Server Error
       security:
         - Bearer: [ ]
       operationId: updateitem
@@ -514,6 +554,16 @@ paths:
                 ' Successful response.':
                   value: <text>Successful response</text>
           description: Successful response.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    Error: Internal Server Error
+          description: "\t\r\nInternal Server Error"
       security:
         - Bearer: [ ]
       operationId: addeditem
@@ -555,6 +605,71 @@ paths:
           type: string
         in: path
         required: true
+  /oAuth2Login:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+            examples:
+              GoogleAuthRequestBody:
+                value:
+                  idToken: Bearer 0f054c4c-6402-4c35-a55f-2b235c6397a5
+                  audience: >-
+                    668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com
+        required: true
+      tags:
+        - oAuth2Login
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                SessionId:
+                  value:
+                    Session: SessionId returned
+          description: Returns sessionId
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    Error: Internal Server Error
+          description: Internal Server Error
+      security:
+        - Bearer: [ ]
+  /logs:
+    get:
+      tags:
+        - Logs
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                Logs sent:
+                  value:
+                    message: Logs sent
+          description: |
+            Logs sent
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unauthorized:
+                  value:
+                    Error: Unauthorized
+          description: "\t\r\nUnauthorized"
+      security:
+        - Bearer: [ ]
 components:
   schemas:
     User:
@@ -568,7 +683,6 @@ components:
           type: string
       example:
         email: test@test.ee
-        id: 1
         password: qwerty12
     Item:
       title: Root Type for items
@@ -582,7 +696,7 @@ components:
         name:
           type: string
       example:
-        item: item nr 1
+        name: item nr 1
         description: it is green and small
         image: >-
           https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
@@ -628,4 +742,8 @@ tags:
   - name: Users
     description: ''
   - name: Health-checks
+    description: ''
+  - name: Logs
+    description: ''
+  - name: oAuth2Login
     description: ''

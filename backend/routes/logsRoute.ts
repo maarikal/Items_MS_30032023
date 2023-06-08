@@ -1,11 +1,13 @@
 import express, {Request, Response} from 'express';
 import fs from "fs";
+import authorizeRequest from "../functions";
 
 const router = express.Router();
 
 // Routes
 router.get(
     '/',
+    authorizeRequest,
     // logs get and data is in file.log
     (async (req: Request, res: Response) => {
         const data = fs.readFileSync('file.log', 'utf8');

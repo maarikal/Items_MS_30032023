@@ -1,10 +1,10 @@
-import express, {Request, Response} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import authorizeRequest from "../functions";
+import authorizeRequest, {isXMLHeader, xmlResponse, sendRequest} from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -17,19 +17,20 @@ router.get(
         // Get all items from database using Prisma
         const items = await prisma.item.findMany();
         // Return items
-        return res.status(200).send(items);
+        return sendRequest(req, res, items, 201)
     }),
 );
 
 router.post(
     '/',
-    handleErrors(async (req: Request, res: Response) => {
+    handleErrors(async (req: IRequestWithSession, res: Response) => {
         // Save item to database using Prisma
+        const {name, description, image} = req.body;
         const item = await prisma.item.create({
             data: {
-                name: req.body.name,
-                description: req.body.description,
-                image: req.body.image,
+                name,
+                description,
+                image,
             },
         });
         console.log('backend: ', item)
@@ -62,22 +63,24 @@ router.post(
                 )
             );
         // Return item
-        return res.status(201).send(item);
-    }))
+        // return res.status(201).send(item);
+        return sendRequest(req, res, item, 201)
+    })),
 
 // Add route to update item in database using PUT http://localhost:3000/items?id=71
-router.put(
-    '/',
-    handleErrors(async (req: Request, res: Response) => {
+    router.put(
+        '/',
+        handleErrors(async (req: Request, res: Response) => {
             // Update item in database using Prisma
+            const {name, description, image} = req.body
             const item = await prisma.item.update({
                 where: {
                     id: Number(req.query.id),
                 },
                 data: {
-                    name: req.body.name,
-                    description: req.body.description,
-                    image: req.body.image,
+                    name,
+                    description,
+                    image,
                 },
             });
             // Log item update
@@ -96,7 +99,7 @@ router.put(
                     )
                 );
             // Return item
-            return res.status(200).send(item);
+            return sendRequest(req, res, item, 201)
         }
     ));
 
@@ -129,5 +132,6 @@ router.delete(
         // Return item
         return res.status(204).end();
     }));
+
 
 export default router;
