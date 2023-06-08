@@ -1,11 +1,10 @@
-import {NextFunction, Response} from "express";
+import express, {NextFunction, Request, Response} from "express";
 import {PrismaClient} from '@prisma/client';
 import {IRequestWithSession} from 'function';
 import xml2js from 'xml2js';
-
+import itemsRoutes from "./routes/itemsRoutes";
 
 const prisma = new PrismaClient();
-
 
 // check if authorization header is present (5bi)
 async function authorizeRequest(req: IRequestWithSession, res: Response, next: NextFunction) {
@@ -51,30 +50,50 @@ async function authorizeRequest(req: IRequestWithSession, res: Response, next: N
     next()
 }
 
-export const sendResponse = async (req: IRequestWithSession, res: Response, data: any, status: number) => {
-    const acceptHeader = req.headers["content-type"] || '';
-    console.log("acceptHeader: ", acceptHeader)
+function sendResponse(req: IRequestWithSession, res: Response, data: any) {
+    const acceptHeader = req.headers.accept || '';
     if (acceptHeader === 'application/json') {
         return res.status(201).json(data);
-    } else if (
-        acceptHeader.includes('application/xml') ||
-        acceptHeader.includes('text/xml') ||
-        acceptHeader.includes('application/xhtml+xml')
-    ) {
-        const data = req.body
-        const xmlBuilder = new xml2js.Builder({rootName: 'root'})
-        const xmlData = xmlBuilder.buildObject({
-            items: {
-                name: data.name,
-                description: data.description,
-                image: data.image,
-            }
-        });
-        res.set('Content-Type', 'application/xml');
-        return res.status(201).send(xmlData);
+    } else if (acceptHeader === 'text/html') {
+        return res.status(201).send(`<h1>${data.name}</h1><p>${data.description}</p>`);
+    } else if (acceptHeader === 'application/xml') {
+        const xml = `
+            <item>
+                <name>${data.name}</name>
+                <description>${data.description}</description>
+                <image>${data.image}</image>
+            </item>
+        `;
+        return res.status(201).send(xml);
     } else {
         return res.status(406).send('Not Acceptable');
     }
 }
+
+
+export const xmlResponse = (res: Response, object: any, status: number) => {
+    const builder = new xml2js.Builder();
+    const xml = builder.buildObject(object);
+    res.set('Content-Type', 'application/xml');
+    res.status(status).send(xml);
+};
+
+export const isXMLHeader = (req: Request) => {
+    const acceptHeader = req.headers.accept || '';
+    //const items = prisma.item.findMany();
+    return acceptHeader.includes('application/xml') || acceptHeader.includes('text/xml');
+};
+
+export const sendRequest = (req: IRequestWithSession, res: Response, data: any, status: number) => {
+    if (req.headers.accept === 'text/xml') {
+
+        const convert = require('xml2js');
+        const options = {compact: true, ignoreComment: true, spaces: 4};
+        const xml = convert.json2xml(data, options);
+        return res.status(status).send(xml)
+    }
+    return res.status(status).json(data)
+}
+
 
 export default authorizeRequest;
