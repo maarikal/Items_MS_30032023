@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import authorizeRequest, {sendResponse} from "../functions";
+import authorizeRequest, {isXMLHeader, xmlResponse, sendRequest} from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -17,10 +17,9 @@ router.get(
         // Get all items from database using Prisma
         const items = await prisma.item.findMany();
         // Return items
-        return res.status(201).send(items);
+        return sendRequest(req, res, items, 201)
     }),
 );
-
 
 router.post(
     '/',
@@ -37,68 +36,43 @@ router.post(
         console.log('backend: ', item)
 
         // send a 'addItem' event with the new item data
+        // @ts-ignore
         expressWs.getWss().clients
             .forEach((client: any) => client
                 .send(
                     JSON.stringify({
                         type: 'addItem',
                         item: item,
-                    })));
+                    })
+                )
+            );
+
         // Log item creation with timestamp
         logger.info('Item created', {item});
 
+
         // send a 'addItem' event with the new item data
+        // @ts-ignore
         expressWs.getWss().clients
             .forEach((client: any) => client
                 .send(
                     JSON.stringify({
                         type: 'addItem',
                         item: item,
-                    })));
-        // return item
-        console.log('sendResponse:', item)
-        return sendResponse(req, res, item, 201)
+                    })
+                )
+            );
+        // Return item
+        // return res.status(201).send(item);
+        return sendRequest(req, res, item, 201)
     })),
 
-    /*const handlePostRequest = async (req: IRequestWithSession, res: Response): Promise<void | Response<any, Record<string, any>>> => {
-        // Save item to database using Prisma
-        const { name, description, image } = req.body;
-        const item = await prisma.item.create({
-            data: {
-                name,
-                description,
-                image,
-            },
-        });
-        console.log('backend: ', item);
-
-        // send a 'addItem' event with the new item data
-        // @ts-ignore
-        expressWs.getWss().clients.forEach((client: any) =>
-            client.send(
-                JSON.stringify({
-                    type: 'addItem',
-                    item: item,
-                })
-            )
-        );
-
-        // Log item creation with timestamp
-        logger.info('Item created', { item });
-
-        // Return item
-        return sendRequest(req, res, item, 201);
-    };
-
-    router.post('/', handleErrors(handlePostRequest) as express.Handler);*/
-
 // Add route to update item in database using PUT http://localhost:3000/items?id=71
-    router.patch(
+    router.put(
         '/',
         handleErrors(async (req: Request, res: Response) => {
             // Update item in database using Prisma
             const {name, description, image} = req.body
-            console.log('patch: ', req.body)
             const item = await prisma.item.update({
                 where: {
                     id: Number(req.query.id),
@@ -125,7 +99,7 @@ router.post(
                     )
                 );
             // Return item
-            return sendResponse(req, res, item, 201)
+            return sendRequest(req, res, item, 201)
         }
     ));
 

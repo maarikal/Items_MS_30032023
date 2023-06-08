@@ -31,12 +31,6 @@ paths:
                     description: some text
                     image: a picture
                     name: new namet
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Item returned:
-                  value: "<Item>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>"
           description: Items returned
         '401':
           content:
@@ -47,26 +41,7 @@ paths:
                 Unauthorized:
                   value:
                     error: Unauthorized
-                Bearer:
-                  value:
-                    error: Authorization header is not in Bearer XXX format
-                Session not found:
-                  value:
-                    error: Session not found
-                User not found:
-                  value:
-                    error: User not found
           description: Unauthorized
-        '406':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Not Acceptable:
-                  value:
-                    error: Not acceptable
-          description: Not accetable
       security:
         - Bearer: [ ]
       summary: Get all items
@@ -90,7 +65,7 @@ paths:
               $ref: '#/components/schemas/Item'
             examples:
               PostItemsRequestBody_xml:
-                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>\r\n"
+                value: "<Item>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</Item>"
         required: true
       tags:
         - Items
@@ -111,18 +86,8 @@ paths:
                 $ref: '#/components/schemas/Item'
               examples:
                 Item returned:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>\r\n</head>"
+                  value: "<Item>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>"
           description: Return item
-        '406':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Not Acceptable:
-                  value:
-                    error: Not Acceptable
-          description: Not Acceptable
         '500':
           content:
             application/json:
@@ -153,9 +118,6 @@ paths:
           text/xml:
             schema:
               $ref: '#/components/schemas/User'
-            examples:
-              PostUserRequestBody_xml:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
         required: true
       tags:
         - Users
@@ -168,14 +130,13 @@ paths:
               examples:
                 User returned:
                   value:
-                    email: some email
-                    password: some password
+                    User: Returned
             text/xml:
               schema:
                 $ref: '#/components/schemas/User'
               examples:
                 User returned:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
+                  value: <text>User returned</text>
           description: Return user
         '400':
           content:
@@ -250,12 +211,6 @@ paths:
                 value:
                   email: test1@test.ee
                   password: qwerty123
-          text/xml:
-            schema:
-              $ref: '#/components/schemas/User'
-            examples:
-              PostUsersRequestBody:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
         required: true
       tags:
         - Users
@@ -268,9 +223,18 @@ paths:
               examples:
                 Email is valid:
                   value:
-                    email: some email
-                    password: password
+                    User: Email is valid
           description: Email is valid
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                User is created:
+                  value:
+                    User: Created
+          description: User is created
         '400':
           content:
             application/json:
@@ -281,6 +245,24 @@ paths:
                   value:
                     error: Bad Request
           description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Email is required:
+                  value:
+                    error: Email is required
+                Password must be at least 8 characters long:
+                  value:
+                    error: Password must be at least 8 characters long
+                Invalid email structure:
+                  value:
+                    error: Invalid email structure
+          description: |-
+            Email and password is required.
+            Password must be at least 8 characters long
         '409':
           content:
             application/json:
@@ -340,14 +322,13 @@ paths:
               examples:
                 SessionId:
                   value:
-                    user: test@test.ee
-                    password: qwerty123
+                    Session: SessionId created
             text/xml:
               schema:
                 $ref: '#/components/schemas/Session'
               examples:
                 SessionId:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
+                  value: <text>SessionId created</text>
           description: Send sessionId
         '400':
           content:
@@ -394,7 +375,37 @@ paths:
         - Sessions
       responses:
         '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                SessionId deleted:
+                  value:
+                    Session: SessionId deleted
           description: SessionId deleted
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unauthorized:
+                  value:
+                    error: Unauthorized
+                Session not found:
+                  value:
+                    error: Session not found
+                "Authorization missing\t":
+                  value:
+                    error: Authorization header is missing
+                Bearer:
+                  value:
+                    error: Authorization header is not in Bearer XXX
+                User not found:
+                  value:
+                    error: User not found
+          description: Unauthorized
         '404':
           content:
             application/json:
@@ -405,16 +416,6 @@ paths:
                   value:
                     error: No session found
           description: No session found
-        '500':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Internal Server Error:
-                  value:
-                    error: Internal Server Error
-          description: Internal Server Error
       security:
         - Bearer: [ ]
       summary: Delete a session
@@ -424,6 +425,89 @@ paths:
       The REST endpoint/path used to get, update, and delete single instances of an `items`.  This path
       contains `GET`, `PUT`, and `DELETE` operations used to perform the get, update, and delete tasks,
       respectively.
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+            examples:
+              ' PutItemsRequestBody':
+                value:
+                  name: new bird
+                  description: it is green and small
+                  image: >-
+                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      tags:
+        - Items
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item:
+                  value:
+                    Item: Item returned
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item returned:
+                  value: <text>Item returned</text>
+          description: Return item
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item created:
+                  value:
+                    Item: Item created
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Item created:
+                  value: <text>Item created</text>
+          description: Item created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Response:
+                  value:
+                    Item: Successful response
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Successful response:
+                  value: <text>Successful response</text>
+          description: Successful response.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    Error: Internal Server Error
+          description: Internal Server Error
+      security:
+        - Bearer: [ ]
+      operationId: updateitem
+      summary: Update a item
+      description: Updates an existing item.
     post:
       requestBody:
         description: Added item information.
@@ -431,19 +515,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Item'
-            examples:
-              PostItemIdRequestBody_json:
-                value:
-                  name: new bird2
-                  description: it is green and small
-                  image: >-
-                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
           text/xml:
             schema:
               $ref: '#/components/schemas/Item'
-            examples:
-              PostItemIdRequestBody_xml:
-                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name>item nr 2</name>\n\t<description>it is green and small</description>\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\n</root>\n"
         required: true
       tags:
         - Items
@@ -456,15 +530,13 @@ paths:
               examples:
                 Created:
                   value:
-                    description: some text
-                    image: one image
-                    name: some name
+                    Item: Item has created
             text/xml:
               schema:
                 $ref: '#/components/schemas/Item'
               examples:
                 Created:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>\r\n</head>"
+                  value: <text>Item created</text>
           description: Item created
         '202':
           content:
@@ -482,16 +554,6 @@ paths:
                 ' Successful response.':
                   value: <text>Successful response</text>
           description: Successful response.
-        '406':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Not Acceptable:
-                  value:
-                    error: Not Acceptable
-          description: Not Acceptable
         '500':
           content:
             application/json:
@@ -511,87 +573,31 @@ paths:
       tags:
         - Items
       responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Item deleted:
+                  value:
+                    Item: Deleted
+          description: Return item
         '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+              examples:
+                Successful response.:
+                  value:
+                    Item: Successful response
           description: Successful response.
       security:
         - Bearer: [ ]
       operationId: deleteitems
       summary: Delete a item
       description: Deletes an existing `items`.
-    patch:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Item'
-            examples:
-              PatchItemRequestBody_json:
-                value:
-                  name: new bird
-                  description: it is green and small
-                  image: >-
-                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
-          text/xml:
-            schema:
-              $ref: '#/components/schemas/Item'
-            examples:
-              PatchItemRequestBody_xml:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>\r\n</head>"
-        required: true
-      tags:
-        - Items
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Item created:
-                  value:
-                    description: some text
-                    image: some image
-                    name: some name
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Item created:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>\r\n</head>"
-          description: Item created
-        '202':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Response:
-                  value:
-                    description: some text
-                    image: some image
-                    name: some name
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Successful response:
-                  value: "<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>"
-          description: Successful response.
-        '500':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Internal Server Error:
-                  value:
-                    Error: Internal Server Error
-          description: Internal Server Error
-      security:
-        - Bearer: [ ]
-      operationId: updateitem
-      summary: Update a item
-      description: Updates an existing item.
     parameters:
       - name: itemsId
         description: A unique identifier for a `items`.
@@ -609,8 +615,9 @@ paths:
             examples:
               GoogleAuthRequestBody:
                 value:
-                  token: >-
-                    eyJhbGciOiJSUzI1NiIsImtpZCI6IjA1MTUwYTEzMjBiOTM5NWIwNTcxNjg3NzM3NjkyODUwOWJhYjQ0YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODY4MzMyMDMsImF1ZCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwMjI1OTAzMjY0MjI1NjgwMDU1MCIsImVtYWlsIjoic2lsdmVyLnNpcnBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsIm5hbWUiOiJTaWx2ZXIgU2lycCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRlWnJUc1FzRkNlN0ZpbFNwelFoZXFReGpSTnJ6cGFoaUhjRFlfZz1zOTYtYyIsImdpdmVuX25hbWUiOiJTaWx2ZXIiLCJmYW1pbHlfbmFtZSI6IlNpcnAiLCJpYXQiOjE2ODY4MzM1MDMsImV4cCI6MTY4NjgzNzEwMywianRpIjoiYjgwODlmZjc1ZmRkNTQ3ODQ2Njk5ZTc1NzVjMjIxNWFiMWM3Y2UxZSJ9.xBc_fkkf3MRZMjSZN9IxQTUHaeAo5B6WJL-ZBvyEMknregEtk7m9KepEZmXYasEeFUh0KRq-MEz_037K34qSW5Pv2Hce5cEpY3pRSy0mvrWsxTUQ9LptkRjGnXl2tE1zU26NkX77d75Gn7B0vSai7uNNhdRZLNsyytkNJQvXJ28v18lmyLvTT9vilIjGOqFN1ZBrCv5tUCfGy2e6X8KTtEUJzmLWkrHSJo5sWmvdUedicpuaJCMFl65mTMKlb2PsFeQDQousOVAxgCJgtCFIibhAZ7lHqWZ0VUt-6GKv81AhyJqwXY7YbrlfyewVYAnBkuzzszmU-erauY3qLnBfXQ
+                  idToken: Bearer 0f054c4c-6402-4c35-a55f-2b235c6397a5
+                  audience: >-
+                    668250301704-q7j4t8tnkmk88j3d6jsrkujt74311unb.apps.googleusercontent.com
         required: true
       tags:
         - oAuth2Login
@@ -623,19 +630,8 @@ paths:
               examples:
                 SessionId:
                   value:
-                    user: test@test.ee
-                    password: qwerty123
+                    Session: SessionId returned
           description: Returns sessionId
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Bad Request:
-                  value:
-                    error: Bad Request
-          description: Bad Request
         '500':
           content:
             application/json:
@@ -656,21 +652,10 @@ paths:
         '200':
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
               examples:
                 Logs sent:
                   value:
-                    logs:
-                      - item:
-                          description: >-
-                            Emeepabi topha edmuk wujzi hubdi jo riwbeoc ozgi caf
-                            celurbe gubi neg fopuvfu kiakba rowdelwol la hapupes.
-                          id: 353
-                          image: 'https://picsum.photos/96/96?random=447'
-                          name: uuuuuus2
-                        message: ITEM UPDATED
-                        timestamp: '01-06-2023 11:12:51'
+                    message: Logs sent
           description: |
             Logs sent
         '401':
@@ -681,16 +666,7 @@ paths:
               examples:
                 Unauthorized:
                   value:
-                    error: Unauthorized
-                Bearer:
-                  value:
-                    error: Authorization header is not in Bearer XXX format
-                Session not found:
-                  value:
-                    error: Session not found
-                User not found:
-                  value:
-                    error: User not found
+                    Error: Unauthorized
           description: "\t\r\nUnauthorized"
       security:
         - Bearer: [ ]
