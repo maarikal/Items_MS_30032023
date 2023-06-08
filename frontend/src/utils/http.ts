@@ -82,8 +82,8 @@ export class $http {
         return this.request('DELETE', url, null, null);
     }
 
-    static put(url: string, data: { id: string, image: string; name: string; description: string }) {
+    static patch(url: string, data: { id: string, image: string; name: string; description: string }) {
         console.log('url: ', url);
-        return this.request('PUT', url, data, null);
+        return this.request('PATCH', url, data, null);
     }
 }
