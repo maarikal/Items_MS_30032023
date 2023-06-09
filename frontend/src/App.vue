@@ -110,6 +110,8 @@ export default {
     logout() {
       $http.delete('/sessions').then(response => {
         console.log("frontendi delete message:", response)
+        // remove sessionId from localStorage
+        localStorage.removeItem('sessionId')
       }).catch(error => {
         console.log(error)
       })

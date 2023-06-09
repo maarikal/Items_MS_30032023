@@ -24,7 +24,6 @@ router.get(
                 };
                 return transformedLog;
             });
-        console.log("logs", logs)
         res.send({logs: logs});
     })
 );

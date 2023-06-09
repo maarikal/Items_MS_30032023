@@ -3,6 +3,7 @@ import {PrismaClient} from '@prisma/client';
 import {IRequestWithSession} from 'function';
 import xml2js, {Builder, parseStringPromise} from 'xml2js';
 import itemsRoutes from "./routes/itemsRoutes";
+import {js2xml} from "xml-js";
 
 const prisma = new PrismaClient();
 
@@ -50,8 +51,9 @@ async function authorizeRequest(req: IRequestWithSession, res: Response, next: N
     next()
 }
 
-export function sendResponse(req: IRequestWithSession, res: Response, data: any, status: number) {
-    const acceptHeader = req.headers.accept || '';
+export const sendResponse = async (req: IRequestWithSession, res: Response, data: any, status: number) => {
+    const acceptHeader = req.headers["content-type"] || '';
+    console.log("acceptHeader: ", acceptHeader)
     if (acceptHeader === 'application/json') {
         return res.status(201).json(data);
     } else if (
@@ -59,6 +61,8 @@ export function sendResponse(req: IRequestWithSession, res: Response, data: any,
         acceptHeader.includes('text/xml') ||
         acceptHeader.includes('application/xhtml+xml')
     ) {
+        const data = req.body.head.root[0];
+        console.log("data: ", req.body.head.root[0])
         const xml = `
             <?xml version="1.0" encoding="UTF-8"?>
             <item>
@@ -67,6 +71,7 @@ export function sendResponse(req: IRequestWithSession, res: Response, data: any,
                 <image>${data.image}</image>
             </item>
         `;
+        console.log("xml: ", xml)
         res.set('Content-Type', 'application/xml');
         return res.status(201).send(xml);
     } else {
@@ -74,21 +79,14 @@ export function sendResponse(req: IRequestWithSession, res: Response, data: any,
     }
 }
 
-
 /*export const isXMLHeader = (req: Request) => {
     const acceptHeader = req.headers.accept || '';
     //const items = prisma.item.findMany();
     return acceptHeader.includes('application/xml') || acceptHeader.includes('text/xml');
 };*/
 
-/*export const xmlResponse = (res: Response, data: any, status: number) => {
-    const builder = new xml2js.Builder();
-    const xml = builder.buildObject(data);
-    res.set('Content-Type', 'application/xml');
-    res.status(status).send(xml);
-};*/
 
-export const sendRequest = async (req: IRequestWithSession, res: Response, data: any, status: number) => {
+export const sendRequest2 = async (req: IRequestWithSession, res: Response, data: any, status: number) => {
     if ((req.headers["content-type"] === 'text/xml') || (req.headers["content-type"] === 'application/xml') || (req.headers["content-type"] === '?xml')) {
 
         //const convert = require('xml2js').default;
@@ -108,18 +106,23 @@ export const sendRequest = async (req: IRequestWithSession, res: Response, data:
         try {
             const jsonData = await parseStringPromise(finalXml, {explicitArray: false}); // Convert finalXml to JSON
             console.log('jsonData: ', jsonData);
-
             return res.status(status).json(jsonData);
         } catch (error) {
             console.error('Error parsing XML:', error);
             return res.status(status).json(data);
         }
-
     }
     return res.status(status).json(data)
 }
 
-/*export const sendRequest = (req: IRequestWithSession, res: Response, data: any, status: number): void | Response<any, Record<string, any>> => {
+/*export const xmlResponse = (res: Response, data: any, status: number) => {
+    const builder = new xml2js.Builder();
+    const xml = builder.buildObject(data);
+    res.set('Content-Type', 'application/xml');
+    res.status(status).send(xml);
+};
+
+export const sendRequest = (req: IRequestWithSession, res: Response, data: any, status: number): void | Response<any, Record<string, any>> => {
     const { accept } = req.headers;
     if (accept === 'text/xml' || accept === 'application/xml') {
         const convert = require('xml2js');

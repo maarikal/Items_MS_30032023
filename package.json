@@ -18,6 +18,7 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "xml-js": "^1.6.11",
     "xml2js": "^0.6.0"
   }
 }
