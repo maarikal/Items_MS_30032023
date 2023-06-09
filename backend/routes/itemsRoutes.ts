@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import authorizeRequest, {sendRequest, sendResponse} from "../functions";
+import authorizeRequest, {sendResponse} from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -17,9 +17,10 @@ router.get(
         // Get all items from database using Prisma
         const items = await prisma.item.findMany();
         // Return items
-        return sendRequest(req, res, items, 201)
+        return res.status(201).send(items);
     }),
 );
+
 
 router.post(
     '/',
@@ -36,34 +37,27 @@ router.post(
         console.log('backend: ', item)
 
         // send a 'addItem' event with the new item data
-        // @ts-ignore
         expressWs.getWss().clients
             .forEach((client: any) => client
                 .send(
                     JSON.stringify({
                         type: 'addItem',
                         item: item,
-                    })
-                )
-            );
-
+                    })));
         // Log item creation with timestamp
         logger.info('Item created', {item});
 
-
         // send a 'addItem' event with the new item data
-        // @ts-ignore
         expressWs.getWss().clients
             .forEach((client: any) => client
                 .send(
                     JSON.stringify({
                         type: 'addItem',
                         item: item,
-                    })
-                )
-            );
-        // Return item
-        return sendRequest(req, res, item, 201)
+                    })));
+        // return item
+        console.log('sendResponse:', item)
+        return sendResponse(req, res, item, 201)
     })),
 
     /*const handlePostRequest = async (req: IRequestWithSession, res: Response): Promise<void | Response<any, Record<string, any>>> => {
@@ -131,7 +125,7 @@ router.post(
                     )
                 );
             // Return item
-            return sendRequest(req, res, item, 201)
+            return sendResponse(req, res, item, 201)
         }
     ));
 
