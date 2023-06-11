@@ -5,6 +5,54 @@ Items Repository is a simple express app that allows you to create a simple repo
 This is a web application for managing a list of items. Users can view a list of items, view details about individual
 items, add new items (if signed in), and delete existing items (if signed in).
 
+### Prerequisites
+- Node.js v16 (v16.14.2 is he latest supported Node), won't work with v18
+- npm v7
+- Git
+- OpenSSL
+- Google Chrome
+
+### Using Node.js and nvm data sources
+- [https://nodejs.org/en/download/]
+- [https://www.freecodecamp.org/news/nvm-for-windows-how-to-download-and-install-node-version-manager-in-windows-10/]
+- [https://github.com/coreybutler/nvm-windows/releases]
+- [https://blog.logrocket.com/switching-between-node-versions-during-development/]
+
+### Installation
+#### Getting and using Node Version Manager (NVM)
+##### For Windows
+0. Uninstall any pre-existing Node installations!!
+0.1 Run `node -v` to check if Node is installed. Iy you see a version number, then Node is installed. If you see an
+    error message, then Node is not installed.
+1. Go to [https://github.com/coreybutler/nvm-windows/releases]
+2. Click on the "nvm-setup.exe" link to download the NVM setup file.
+3. Run the setup file.
+5. Follow the instructions in the setup wizard.
+6. Open PowerShell window as an Administrator and move to C:/Users/your-user-name
+7. Run `nvm -v` to check if NVM is installed. If you see a version number, then NVM is installed. If you see an error message, then NVM is not installed.
+8. To use the latest lts version of Node.js, run `nvm use lts` in PowerShell window as an Administrator in Windows\System32 directory.
+   PS C:\Users\kasutaja> cd ..
+   PS C:\Users> cd ..
+   PS C:\> cd .\Windows\
+   PS C:\Windows> cd .\System32\
+   PS C:\Windows\System32> nvm install lts 
+9. Run `nvm install 16.14.2` to install Node.js v16.14.2. 
+10. Run `nvm use 16.14.2` to use Node.js v16.14.2.
+11. Move to Installation section if you do not want to install the latest Node as-well. 
+12. Install latest Node.js version by running `nvm install latest` in PowerShell window as an Administrator. 
+13. Setup node location in idea by going to File -> Settings -> Languages & Frameworks -> Node.js 
+14. Restart idea 
+15. Run `node -v` to check Node version
+
+##### For Mac
+0. Uninstall any pre-existing Node installations!!
+1. Run `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash` to install NVM.
+2. Run `nvm install 16.14.2` to install Node.js v16.14.2.
+3. Run `nvm use 16.14.2` to use Node.js v16.14.2. 
+4. Move to Installation section if you do not want to install the latest Node as-well. 
+5. Run `nvm install latest` to install the latest version of Node.js. 
+6. Run `nvm use latest` to use the latest version of Node.js.
+
 ### Installation
 1. Run `./install.sh` (Use Git Bash on Windows)
 2. Copy your client ID into the backend environment file (see below for instructions on how to create a client ID)
