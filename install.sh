@@ -41,6 +41,5 @@ rm csr.conf
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 npm run install
-npm i @bahmutov/cypress-esbuild-preprocessor
 cd backend && npx prisma db push
 npm run import:db && cd ..
