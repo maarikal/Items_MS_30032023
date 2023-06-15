@@ -75,11 +75,14 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use((req: Request, res: Response, next: NextFunction) => {
     // if content-type is xml, remove the outer object from the body
     if (req.headers["content-type"] === "application/xml" || req.headers["content-type"] === "text/xml") {
-        // Extract the first key from the body
-        const key = Object.keys(req.body.root)[0];
-        console.log("key: " + key);
-        // Set the body to the value of the first key
-        req.body = req.body[key];
+        const data = req.body.root;
+        const {name, description, image} = data;
+        // Extract the data from the root object
+        req.body = {
+            name: name[0],
+            description: description[0],
+            image: image[0],
+        }
     }
     next();
 });

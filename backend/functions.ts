@@ -3,6 +3,7 @@ import {PrismaClient} from '@prisma/client';
 import {IRequestWithSession} from 'function';
 import xml2js from 'xml2js';
 
+
 const prisma = new PrismaClient();
 
 
@@ -60,20 +61,15 @@ export const sendResponse = async (req: IRequestWithSession, res: Response, data
         acceptHeader.includes('text/xml') ||
         acceptHeader.includes('application/xhtml+xml')
     ) {
-        const data = req.body.root
-        /*        const xml = xmlTemplate(data);*/
-
+        const data = req.body
         const xmlBuilder = new xml2js.Builder({rootName: 'root'})
-        // const xmlData = xmlBuilder.buildObject({items: data})
         const xmlData = xmlBuilder.buildObject({
             items: {
-                name: data.name[0] || '', // Provide default value if name is null or undefined
-                description: data.description[0] || '', // Provide default value if description is null or undefined
-                image: data.image[0] || '', // Provide default value if image is null or undefined
+                name: data.name,
+                description: data.description,
+                image: data.image,
             }
         });
-        console.log("xml: ", xmlData)
-        console.log("name: ", data.name[0])
         res.set('Content-Type', 'application/xml');
         return res.status(201).send(xmlData);
     } else {
