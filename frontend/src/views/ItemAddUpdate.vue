@@ -31,9 +31,9 @@ export default {
         this.$router.push('/items')
       })
     },
-    // send a PUT request to the backend using query string filling the form
+    // send a PATCH request to the backend using query string filling the form
     updateItem() {
-      $http.put(`/items?id=${this.$route.query.id}`, {
+      $http.patch(`/items?id=${this.$route.query.id}`, {
         name: this.name,
         description: this.description,
         image: this.image

@@ -8,6 +8,7 @@ import itemsRoutes from "./routes/itemsRoutes";
 import cors from 'cors';
 import sessionsRoute from "./routes/sessionsRoute";
 import bodyParser from "body-parser";
+
 import bodyParserXml from "body-parser-xml";
 import logsRoute from "./routes/logsRoute";
 import oAuth2LoginRoute from "./routes/oAuth2LoginRoute";
@@ -67,10 +68,24 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true})); // use url-encoded middleware
-app.use(bodyParser.xml());
+app.use(bodyParser.xml())
 app.use(express.static('public'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+    // if content-type is xml, remove the outer object from the body
+    if (req.headers["content-type"] === "application/xml" || req.headers["content-type"] === "text/xml") {
+        const data = req.body.root;
+        const {name, description, image} = data;
+        // Extract the data from the root object
+        req.body = {
+            name: name[0],
+            description: description[0],
+            image: image[0],
+        }
+    }
+    next();
+});
 
 // Routes
 app.use('/users', usersRoutes);
@@ -83,3 +98,4 @@ app.use('/oAuth2Login', oAuth2LoginRoute);
 app.get('/health-check', (req, res) => {
     res.status(200).send('OK');
 });
+

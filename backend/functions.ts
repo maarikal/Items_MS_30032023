@@ -1,8 +1,11 @@
-import express, {NextFunction, Response} from "express";
+import {NextFunction, Response} from "express";
 import {PrismaClient} from '@prisma/client';
 import {IRequestWithSession} from 'function';
+import xml2js from 'xml2js';
+
 
 const prisma = new PrismaClient();
+
 
 // check if authorization header is present (5bi)
 async function authorizeRequest(req: IRequestWithSession, res: Response, next: NextFunction) {
@@ -48,26 +51,30 @@ async function authorizeRequest(req: IRequestWithSession, res: Response, next: N
     next()
 }
 
-export const verifySession = async (
-    req: IRequestWithSession,
-    res: express.Response,
-    next: express.NextFunction
-) => {
-    const sessionId = req.headers.authorization;
-    console.log('sessionId:', sessionId);
-    if (!sessionId) {
-        return res.status(401).send('Unauthorized');
+export const sendResponse = async (req: IRequestWithSession, res: Response, data: any, status: number) => {
+    const acceptHeader = req.headers["content-type"] || '';
+    console.log("acceptHeader: ", acceptHeader)
+    if (acceptHeader === 'application/json') {
+        return res.status(201).json(data);
+    } else if (
+        acceptHeader.includes('application/xml') ||
+        acceptHeader.includes('text/xml') ||
+        acceptHeader.includes('application/xhtml+xml')
+    ) {
+        const data = req.body
+        const xmlBuilder = new xml2js.Builder({rootName: 'root'})
+        const xmlData = xmlBuilder.buildObject({
+            items: {
+                name: data.name,
+                description: data.description,
+                image: data.image,
+            }
+        });
+        res.set('Content-Type', 'application/xml');
+        return res.status(201).send(xmlData);
+    } else {
+        return res.status(406).send('Not Acceptable');
     }
-    const session = await prisma.session.findUnique({
-        where: {id: sessionId.substring(7)},
-        select: {userId: true},
-    });
-    console.log('session:', session);
-    if (!session || !session.userId) {
-        return res.status(401).send('Unauthorized');
-    }
-    req.userId = {id: session.userId};
-    next();
-};
+}
 
 export default authorizeRequest;

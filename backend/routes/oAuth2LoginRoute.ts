@@ -33,6 +33,7 @@ router.post(
         try {
             const token = req.body.token;
             const payload = await getDataFromGoogleJwt(token);
+            console.log("token: ", token)
 
             // If the payload exists,
             // take the email from the payload and check if user with this email exists in the database
