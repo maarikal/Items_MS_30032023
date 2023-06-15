@@ -6,7 +6,7 @@
   "scripts": {
     "install": "node runInstall.js",
     "dev": "node runDev.js",
-    "test": "npx cypress open -b chrome --e2e"
+    "test": "npx cypress open"
   },
   "keywords": [],
   "author": "",
