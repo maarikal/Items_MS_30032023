@@ -69,4 +69,3 @@ The API documentation is at [https://localhost:3000/docs](https://localhost:3000
 
 ### Tests
 To run tests, run `npm test`
-
