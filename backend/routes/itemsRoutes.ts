@@ -1,4 +1,4 @@
-import express, {NextFunction, Request, Response} from 'express';
+import express, {Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
@@ -17,6 +17,7 @@ router.get(
         // Get all items from database using Prisma
         const items = await prisma.item.findMany();
         // Return items
+        //return sendResponse(req, res, 'items', 201)
         return res.status(201).send(items);
     }),
 );
@@ -27,6 +28,7 @@ router.post(
     handleErrors(async (req: IRequestWithSession, res: Response) => {
         // Save item to database using Prisma
         const {name, description, image} = req.body;
+        console.log("post req body:", req.body)
         const item = await prisma.item.create({
             data: {
                 name,
@@ -34,7 +36,7 @@ router.post(
                 image,
             },
         });
-        console.log('backend: ', item)
+        console.log('post routeris pärast Prismat: ', item)
 
         // send a 'addItem' event with the new item data
         expressWs.getWss().clients
@@ -58,39 +60,8 @@ router.post(
         // return item
         console.log('sendResponse:', item)
         return sendResponse(req, res, item, 201)
-    })),
+    }));
 
-    /*const handlePostRequest = async (req: IRequestWithSession, res: Response): Promise<void | Response<any, Record<string, any>>> => {
-        // Save item to database using Prisma
-        const { name, description, image } = req.body;
-        const item = await prisma.item.create({
-            data: {
-                name,
-                description,
-                image,
-            },
-        });
-        console.log('backend: ', item);
-
-        // send a 'addItem' event with the new item data
-        // @ts-ignore
-        expressWs.getWss().clients.forEach((client: any) =>
-            client.send(
-                JSON.stringify({
-                    type: 'addItem',
-                    item: item,
-                })
-            )
-        );
-
-        // Log item creation with timestamp
-        logger.info('Item created', { item });
-
-        // Return item
-        return sendRequest(req, res, item, 201);
-    };
-
-    router.post('/', handleErrors(handlePostRequest) as express.Handler);*/
 
 // Add route to update item in database using PUT http://localhost:3000/items?id=71
     router.patch(

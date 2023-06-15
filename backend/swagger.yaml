@@ -90,7 +90,7 @@ paths:
               $ref: '#/components/schemas/Item'
             examples:
               PostItemsRequestBody_xml:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>\r\n</head>"
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>\r\n"
         required: true
       tags:
         - Items
@@ -394,14 +394,6 @@ paths:
         - Sessions
       responses:
         '204':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Session'
-              examples:
-                SessionId deleted:
-                  value:
-                    Session: SessionId deleted
           description: SessionId deleted
         '404':
           content:
@@ -451,7 +443,7 @@ paths:
               $ref: '#/components/schemas/Item'
             examples:
               PostItemIdRequestBody_xml:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name>item nr 2</name>\n\t<description>it is green and small</description>\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\n</root>\n</head>"
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name>item nr 2</name>\n\t<description>it is green and small</description>\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\n</root>\n"
         required: true
       tags:
         - Items
@@ -520,14 +512,6 @@ paths:
         - Items
       responses:
         '204':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Successful response.:
-                  value:
-                    Item: Successful response
           description: Successful response.
       security:
         - Bearer: [ ]
@@ -626,7 +610,7 @@ paths:
               GoogleAuthRequestBody:
                 value:
                   token: >-
-                    eyJhbGciOiJSUzI1NiIsImtpZCI6IjYwODNkZDU5ODE2NzNmNjYxZmRlOWRhZTY0NmI2ZjAzODBhMDE0NWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODYyMjAwNDMsImF1ZCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExMTY5NzM3MTkzMDAzMTY4NzY1OSIsImhkIjoidm9jby5lZSIsImVtYWlsIjoibWFhcmlrYS5sdWtrQHZvY28uZWUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiNjY4MjUwMzAxNzA0LXE3ajR0OHRua21rODhqM2Q2anNya3VqdDc0MzExdW5iLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwibmFtZSI6Ik1hYXJpa2EgTHVrayIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRlVUkyNG9RRzlRNHdXd2hJNF9nQ2xzeXhHRC02cUlrdUQ0Wmd3bT1zOTYtYyIsImdpdmVuX25hbWUiOiJNYWFyaWthIiwiZmFtaWx5X25hbWUiOiJMdWtrIiwiaWF0IjoxNjg2MjIwMzQzLCJleHAiOjE2ODYyMjM5NDMsImp0aSI6IjRhYjA1MjlhNjRlMTJiYzBhZDc4NmM4N2JmMWE1NGNmNDliYzM5OTgifQ.glgcojKWzEaKAtqHpCc4B7aZqFBFFzCs29LJG9GJwj7SW8xVf1XJRkUfRrsUV5H0gNyMx_f3m3Pv1chPX5P-teVlDORHg9jh_zJ__rsGCHZqiaG9pC4cJJvVjWq6JThHzQOALIgMxgbc_hDCZuImeoGXQinSrJ31qbe7JMsyCv3_LIv0DRJ0yXjnmsu9vfMtUaRDZLS_6njlI_nQZU6M2rl0slGGyged7-oqWugPDxVh7nvgq55QKqejyfUKGsnf9FUHsHJa86s8xc-YuDxDrj62PvI0_WoU1IGRYO4OX0H6x336o1W9cakd-1WoNRTK89vaWrephKuof0aWYh9e-A
+                    eyJhbGciOiJSUzI1NiIsImtpZCI6IjA1MTUwYTEzMjBiOTM5NWIwNTcxNjg3NzM3NjkyODUwOWJhYjQ0YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODY4MzMyMDMsImF1ZCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwMjI1OTAzMjY0MjI1NjgwMDU1MCIsImVtYWlsIjoic2lsdmVyLnNpcnBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsIm5hbWUiOiJTaWx2ZXIgU2lycCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRlWnJUc1FzRkNlN0ZpbFNwelFoZXFReGpSTnJ6cGFoaUhjRFlfZz1zOTYtYyIsImdpdmVuX25hbWUiOiJTaWx2ZXIiLCJmYW1pbHlfbmFtZSI6IlNpcnAiLCJpYXQiOjE2ODY4MzM1MDMsImV4cCI6MTY4NjgzNzEwMywianRpIjoiYjgwODlmZjc1ZmRkNTQ3ODQ2Njk5ZTc1NzVjMjIxNWFiMWM3Y2UxZSJ9.xBc_fkkf3MRZMjSZN9IxQTUHaeAo5B6WJL-ZBvyEMknregEtk7m9KepEZmXYasEeFUh0KRq-MEz_037K34qSW5Pv2Hce5cEpY3pRSy0mvrWsxTUQ9LptkRjGnXl2tE1zU26NkX77d75Gn7B0vSai7uNNhdRZLNsyytkNJQvXJ28v18lmyLvTT9vilIjGOqFN1ZBrCv5tUCfGy2e6X8KTtEUJzmLWkrHSJo5sWmvdUedicpuaJCMFl65mTMKlb2PsFeQDQousOVAxgCJgtCFIibhAZ7lHqWZ0VUt-6GKv81AhyJqwXY7YbrlfyewVYAnBkuzzszmU-erauY3qLnBfXQ
         required: true
       tags:
         - oAuth2Login
