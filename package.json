@@ -6,7 +6,7 @@
   "scripts": {
     "install": "node runInstall.js",
     "dev": "node runDev.js",
-    "test": "npx cypress open",
+    "test": "npx cypress open -b chrome --e2e",
     "test:unit": "jest"
   },
   "keywords": [],
