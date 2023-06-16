@@ -111,7 +111,7 @@ paths:
                 $ref: '#/components/schemas/Item'
               examples:
                 Item returned:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>\r\n</head>"
+                  value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>"
           description: Return item
         '406':
           content:
@@ -150,12 +150,6 @@ paths:
                 value:
                   email: test@test.ee
                   password: qwerty123
-          text/xml:
-            schema:
-              $ref: '#/components/schemas/User'
-            examples:
-              PostUserRequestBody_xml:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
         required: true
       tags:
         - Users
@@ -170,12 +164,6 @@ paths:
                   value:
                     email: some email
                     password: some password
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                User returned:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
           description: Return user
         '400':
           content:
@@ -186,12 +174,6 @@ paths:
                 Bad Request:
                   value:
                     error: Bad Request
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                '"Bad Request':
-                  value: <text>"Bad Request</text>
           description: Bad request
         '401':
           content:
@@ -208,16 +190,6 @@ paths:
                 Email:
                   value:
                     error: Email is required
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Password is required:
-                  value: <text>Password is required</text>
-                Password must be at least 8 characters long:
-                  value: <text>Password must be at least 8 characters long</text>
-                Email is required":
-                  value: <text>Email is required"</text>
           description: Invalid email or password
         '409':
           content:
@@ -228,12 +200,6 @@ paths:
                 User exists:
                   value:
                     error: User already exists
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                User already exists:
-                  value: <text>User already exists</text>
           description: User already exists
       security:
         - Bearer: [ ]
@@ -322,12 +288,6 @@ paths:
                 value:
                   email: test@test.ee
                   password: qwerty123
-          text/xml:
-            schema:
-              $ref: '#/components/schemas/User'
-            examples:
-              PostSessionsRequestBody:
-                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>"
         required: true
       tags:
         - Sessions
@@ -342,12 +302,6 @@ paths:
                   value:
                     user: test@test.ee
                     password: qwerty123
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Session'
-              examples:
-                SessionId:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
           description: Send sessionId
         '400':
           content:
@@ -358,12 +312,6 @@ paths:
                 Bad Request Error:
                   value:
                     error: Bad Request Error
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Bad Request Error:
-                  value: <text>Bad Request Error</text>
           description: Bad Request
         '401':
           content:
@@ -377,14 +325,6 @@ paths:
                 User not found:
                   value:
                     error: User not found
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Session not found:
-                  value: <text>Session not found</text>
-                User not found:
-                  value: <text>User not found</text>
           description: Session not found
       security:
         - Bearer: [ ]
@@ -464,7 +404,7 @@ paths:
                 $ref: '#/components/schemas/Item'
               examples:
                 Created:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>\r\n</head>"
+                  value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
           description: Item created
         '202':
           content:
@@ -536,7 +476,7 @@ paths:
               $ref: '#/components/schemas/Item'
             examples:
               PatchItemRequestBody_xml:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>\r\n</head>"
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
         required: true
       tags:
         - Items
@@ -557,7 +497,7 @@ paths:
                 $ref: '#/components/schemas/Item'
               examples:
                 Item created:
-                  value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>\r\n</head>"
+                  value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
           description: Item created
         '202':
           content:
@@ -575,7 +515,7 @@ paths:
                 $ref: '#/components/schemas/Item'
               examples:
                 Successful response:
-                  value: "<Item>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</Item>"
+                  value: "<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
           description: Successful response.
         '500':
           content:
@@ -610,7 +550,7 @@ paths:
               GoogleAuthRequestBody:
                 value:
                   token: >-
-                    eyJhbGciOiJSUzI1NiIsImtpZCI6IjA1MTUwYTEzMjBiOTM5NWIwNTcxNjg3NzM3NjkyODUwOWJhYjQ0YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODY4MzMyMDMsImF1ZCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwMjI1OTAzMjY0MjI1NjgwMDU1MCIsImVtYWlsIjoic2lsdmVyLnNpcnBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsIm5hbWUiOiJTaWx2ZXIgU2lycCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRlWnJUc1FzRkNlN0ZpbFNwelFoZXFReGpSTnJ6cGFoaUhjRFlfZz1zOTYtYyIsImdpdmVuX25hbWUiOiJTaWx2ZXIiLCJmYW1pbHlfbmFtZSI6IlNpcnAiLCJpYXQiOjE2ODY4MzM1MDMsImV4cCI6MTY4NjgzNzEwMywianRpIjoiYjgwODlmZjc1ZmRkNTQ3ODQ2Njk5ZTc1NzVjMjIxNWFiMWM3Y2UxZSJ9.xBc_fkkf3MRZMjSZN9IxQTUHaeAo5B6WJL-ZBvyEMknregEtk7m9KepEZmXYasEeFUh0KRq-MEz_037K34qSW5Pv2Hce5cEpY3pRSy0mvrWsxTUQ9LptkRjGnXl2tE1zU26NkX77d75Gn7B0vSai7uNNhdRZLNsyytkNJQvXJ28v18lmyLvTT9vilIjGOqFN1ZBrCv5tUCfGy2e6X8KTtEUJzmLWkrHSJo5sWmvdUedicpuaJCMFl65mTMKlb2PsFeQDQousOVAxgCJgtCFIibhAZ7lHqWZ0VUt-6GKv81AhyJqwXY7YbrlfyewVYAnBkuzzszmU-erauY3qLnBfXQ
+                    eyJhbGciOiJSUzI1NiIsImtpZCI6IjA1MTUwYTEzMjBiOTM5NWIwNTcxNjg3NzM3NjkyODUwOWJhYjQ0YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODY4OTkwMTgsImF1ZCI6IjY2ODI1MDMwMTcwNC1xN2o0dDh0bmttazg4ajNkNmpzcmt1anQ3NDMxMXVuYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExMTY5NzM3MTkzMDAzMTY4NzY1OSIsImhkIjoidm9jby5lZSIsImVtYWlsIjoibWFhcmlrYS5sdWtrQHZvY28uZWUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiNjY4MjUwMzAxNzA0LXE3ajR0OHRua21rODhqM2Q2anNya3VqdDc0MzExdW5iLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwibmFtZSI6Ik1hYXJpa2EgTHVrayIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRlVUkyNG9RRzlRNHdXd2hJNF9nQ2xzeXhHRC02cUlrdUQ0Wmd3bT1zOTYtYyIsImdpdmVuX25hbWUiOiJNYWFyaWthIiwiZmFtaWx5X25hbWUiOiJMdWtrIiwiaWF0IjoxNjg2ODk5MzE4LCJleHAiOjE2ODY5MDI5MTgsImp0aSI6IjMyYTNkMjViNmE3NTU2NDc4MzQ5YjE0YjFiNTFhZWJhNTcxODM1YzQifQ.K0MloftNtAQ8wDaYsEyXu7bMDBPVaG3tIxB7tblE0PmUbU1rw0RTCiCAceJXrHXRz_i2r5BYNBzJt9bngDEspYrlSMm5vFvPex9y87TCnuze9cvgQ7qXaWVsj8X5FvKk7lww99YC7I4z7EL2PVG5ySL6ahw7eqJv3DZXxldJZ7D5WDS_tkknC7126g62kr49w43Fxtf5VQK1E6GGIjTkDm04ajuPICF0t3Ov8yarDMrNlO2nP6ZomjcI_X4nlOAnx8U3R8rpk5GDhjh9SwUxJqVs6i8Q4kX_-enLmPKtkoB6AS_GBOOlLox3JsBEXqPNfwv28hMW078sO7KBej_-zQ
         required: true
       tags:
         - oAuth2Login
