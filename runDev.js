@@ -27,15 +27,10 @@ const killProcessesByPort = (port) => {
     }
 };
 
-const startProcess = (prefix) => {
-    const options = {cwd: prefix, shell: true};
-    //const prefix = directory === './backend' ? 'Backend' : 'Frontend';
-    if (prefix === 'backend') {
-        const process = spawn('npm', ['run', 'dev:backend'], options);
-    }
-    else {
-        const process = spawn('npm', ['run', 'dev:frontend'], options);
-    }
+const startProcess = (directory) => {
+    const options = {cwd: directory, shell: true};
+    const prefix = directory === './backend' ? 'Backend' : 'Frontend';
+    const process = spawn('npm', ['run', 'dev'], options);
     process.stdout.on('data', (data) => {
         console.log(`${prefix}:\n${data.toString().trim()}\n`);
     });
@@ -52,12 +47,11 @@ const startProcess = (prefix) => {
 
 const runApp = () => {
     try {
-        const env = readFileSync('./frontend/backend/.env', 'utf8');
-        console.log(env);
+        const env = readFileSync('./backend/.env', 'utf8');
         const backendPort = env.match(/PORT=(\d+)/)?.[1];
         if (!backendPort) throw new Error('PORT not found in .env');
         [backendPort, 5173].forEach(killProcessesByPort);
-        ['backend', 'frontend'].forEach(startProcess);
+        ['./backend', './frontend'].forEach(startProcess);
     } catch (error) {
         console.error('Error starting application:', error);
     }
