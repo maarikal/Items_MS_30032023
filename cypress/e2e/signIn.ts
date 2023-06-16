@@ -1,7 +1,11 @@
 import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
+
 const And = Given;
 
+let testUser = {email: 'testuser@gmail.com', password: 'password'}
+
 Given('the user is on the website', () => {
+    cy.createUser(testUser);
     cy.visit('https://localhost:5173/');
 });
 
@@ -10,8 +14,8 @@ When('the user clicks on the "Sign In" button', () => {
 });
 
 And('the user enters their login credentials {string}, {string}', () => {
-    cy.get("input[name=email]").type("test@test.ee");
-    cy.get("input[name=password]").type("qwerty123");
+    cy.get("input[name=email]").type(testUser.email);
+    cy.get("input[name=password]").type(testUser.password);
 });
 
 And('clicks the "Sign In" button with id sign-in', () => {
