@@ -10,15 +10,19 @@
     "baseUrl": "./",
     "types": [
       "cypress",
-      "node"
+      "node",
+      "jest",
     ],
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowJs": true
   },
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "tests/**/*.ts",
+    "./vue-shims.d.ts"
   ]
 }
