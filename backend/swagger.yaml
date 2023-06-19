@@ -159,6 +159,17 @@ paths:
                 value:
                   email: test@test.ee
                   password: qwerty123
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              PostUserRequestBody_xml:
+                value: |-
+                  <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                  <root>
+                      <email>test@test.ee</email>
+                      <password>qwerty123</password>
+                  </root>
         required: true
       tags:
         - Users
@@ -230,7 +241,12 @@ paths:
               $ref: '#/components/schemas/User'
             examples:
               PostUsersRequestBody:
-                value: "<head><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<User>\r\n\t<email>test@test.ee</email>\r\n\t<password>qwerty123</password>\r\n</User>\r\n</head>"
+                value: |-
+                  <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                  <root>
+                      <email>test@test.ee</email>
+                      <password>qwerty123</password>
+                  </root>
         required: true
       tags:
         - Users
@@ -307,6 +323,17 @@ paths:
                 value:
                   email: test@test.ee
                   password: qwerty123
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              PostSessionRequestBody:
+                value: |-
+                  <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                  <root>
+                      <email>test@test.ee</email>
+                      <password>qwerty123</password>
+                  </root>
         required: true
       tags:
         - Sessions
