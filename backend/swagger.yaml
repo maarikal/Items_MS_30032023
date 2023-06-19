@@ -221,6 +221,16 @@ paths:
                   value:
                     error: Email already exists
           description: User already exists
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    error: Internal Server Error
+          description: Internal Server Error
       security:
         - Bearer: [ ]
       summary: Create a new user
@@ -292,6 +302,16 @@ paths:
                   value:
                     error: Email already exists
           description: Email already exists
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    error: Internal Server Error
+          description: Internal Server Error
       security:
         - Bearer: [ ]
       summary: Create a new email
@@ -381,6 +401,16 @@ paths:
                   value:
                     error: Invalid email or password
           description: Session not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    error: Internal Server Error
+          description: Internal Server Error
       security:
         - Bearer: [ ]
       summary: Create a new session
