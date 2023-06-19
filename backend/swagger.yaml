@@ -57,16 +57,6 @@ paths:
                   value:
                     error: User not found
           description: Unauthorized
-        '406':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Not Acceptable:
-                  value:
-                    error: Not acceptable
-          description: Not accetable
       security:
         - Bearer: [ ]
       summary: Get all items
@@ -113,6 +103,25 @@ paths:
                 Item returned:
                   value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>"
           description: Return item
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unauthorized:
+                  value:
+                    error: Unauthorized
+                Bearer:
+                  value:
+                    error: Authorization header is not in Bearer XXX format
+                Session not found:
+                  value:
+                    error: Session not found
+                User not found:
+                  value:
+                    error: User not found
+          description: Unauthorized
         '406':
           content:
             application/json:
@@ -131,7 +140,7 @@ paths:
               examples:
                 Internal Server Error:
                   value:
-                    Error: Internal Server Error
+                    error: Internal Server Error
           description: Internal Server Error
       security:
         - Bearer: [ ]
@@ -197,9 +206,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                User exists:
+                Email already exists:
                   value:
-                    error: User already exists
+                    error: Email already exists
           description: User already exists
       security:
         - Bearer: [ ]
@@ -247,6 +256,16 @@ paths:
                   value:
                     error: Bad Request
           description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Email is required:
+                  value:
+                    error: Email is required
+          description: Email is required
         '409':
           content:
             application/json:
@@ -325,6 +344,15 @@ paths:
                 User not found:
                   value:
                     error: User not found
+                Email is required:
+                  value:
+                    error: Email is required
+                Password is required:
+                  value:
+                    error: Password is required
+                Invalid email or password:
+                  value:
+                    error: Invalid email or password
           description: Session not found
       security:
         - Bearer: [ ]
@@ -364,95 +392,31 @@ paths:
       The REST endpoint/path used to get, update, and delete single instances of an `items`.  This path
       contains `GET`, `PUT`, and `DELETE` operations used to perform the get, update, and delete tasks,
       respectively.
-    post:
-      requestBody:
-        description: Added item information.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Item'
-            examples:
-              PostItemIdRequestBody_json:
-                value:
-                  name: new bird2
-                  description: it is green and small
-                  image: >-
-                    https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&usqp=CAU
-          text/xml:
-            schema:
-              $ref: '#/components/schemas/Item'
-            examples:
-              PostItemIdRequestBody_xml:
-                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name>item nr 2</name>\n\t<description>it is green and small</description>\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\n</root>\n"
-        required: true
-      tags:
-        - Items
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Created:
-                  value:
-                    description: some text
-                    image: one image
-                    name: some name
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                Created:
-                  value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
-          description: Item created
-        '202':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                ' Successful response.':
-                  value:
-                    Item: Successful response
-            text/xml:
-              schema:
-                $ref: '#/components/schemas/Item'
-              examples:
-                ' Successful response.':
-                  value: <text>Successful response</text>
-          description: Successful response.
-        '406':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Not Acceptable:
-                  value:
-                    error: Not Acceptable
-          description: Not Acceptable
-        '500':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                Internal Server Error:
-                  value:
-                    Error: Internal Server Error
-          description: "\t\r\nInternal Server Error"
-      security:
-        - Bearer: [ ]
-      operationId: addeditem
-      summary: Add a new item
-      description: Added new item.
     delete:
       tags:
         - Items
       responses:
         '204':
           description: Successful response.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unauthorized:
+                  value:
+                    error: Unauthorized
+                Bearer:
+                  value:
+                    error: Authorization header is not in Bearer XXX format
+                Session not found:
+                  value:
+                    error: Session not found
+                User not found:
+                  value:
+                    error: User not found
+          description: Unauthorized
       security:
         - Bearer: [ ]
       operationId: deleteitems
@@ -499,24 +463,45 @@ paths:
                 Item created:
                   value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
           description: Item created
-        '202':
+        '401':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/Error'
               examples:
-                Response:
+                Unauthorized:
                   value:
-                    description: some text
-                    image: some image
-                    name: some name
-            text/xml:
+                    error: Unauthorized
+                Bearer:
+                  value:
+                    error: Authorization header is not in Bearer XXX format
+                Session not found:
+                  value:
+                    error: Session not found
+                User not found:
+                  value:
+                    error: User not found
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/Error'
               examples:
-                Successful response:
-                  value: "<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
-          description: Successful response.
+                Not Found:
+                  value:
+                    error: Record to update not found.
+          description: Not Found
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not Acceptable:
+                  value:
+                    error: Not Acceptable
+          description: Not Acceptable
         '500':
           content:
             application/json:
@@ -525,7 +510,7 @@ paths:
               examples:
                 Internal Server Error:
                   value:
-                    Error: Internal Server Error
+                    error: Internal Server Error
           description: Internal Server Error
       security:
         - Bearer: [ ]
@@ -584,7 +569,7 @@ paths:
               examples:
                 Internal Server Error:
                   value:
-                    Error: Internal Server Error
+                    error: Internal Server Error
           description: Internal Server Error
       security:
         - Bearer: [ ]
