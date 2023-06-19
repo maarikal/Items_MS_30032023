@@ -10,7 +10,9 @@
     "baseUrl": "./",
     "types": [
       "cypress",
-      "node"
+      "node",
+      "vite/client",
+      "@types/jest",
     ],
     "outDir": "./dist",
     "esModuleInterop": true,
@@ -19,6 +21,7 @@
     "skipLibCheck": true
   },
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "vue-shim.d.ts"
   ]
 }
