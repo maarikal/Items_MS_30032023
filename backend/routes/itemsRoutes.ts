@@ -25,6 +25,7 @@ router.get(
 
 router.post(
     '/',
+    authorizeRequest,
     handleErrors(async (req: IRequestWithSession, res: Response) => {
         // Save item to database using Prisma
         const {name, description, image} = req.body;
@@ -66,6 +67,7 @@ router.post(
 // Add route to update item in database using PUT http://localhost:3000/items?id=71
 router.patch(
     '/',
+    authorizeRequest,
     handleErrors(async (req: Request, res: Response) => {
         // Update item in database using Prisma
         const {name, description, image} = req.body
@@ -103,6 +105,7 @@ router.patch(
 // add route to delete item from database
 router.delete(
     '/',
+    authorizeRequest,
     handleErrors(async (req: Request, res: Response) => {
         // Delete item from database using Prisma
         const item = await prisma.item.delete({

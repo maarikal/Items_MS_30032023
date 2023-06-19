@@ -11,7 +11,10 @@ export const handleErrors = (...routeHandlers: Array<HandlerWithNext | HandlerWi
                 await routeHandler(req, res, next);
             }
             return;
-        } catch (err) {
+        } catch (err: any) {
+            if (err.code === 'P2025') {
+                return res.status(404).send({error: err.meta.cause})
+            }
             next(err);
         }
     };
