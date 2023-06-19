@@ -115,6 +115,8 @@ items, add new items (if signed in), and delete existing items (if signed in).
 ### Documentation
 The API documentation is at [https://localhost:3000/docs](https://localhost:3000/docs)
 
-### Tests
+### E2E Tests
 To run tests, run `npm test`
 
+### Unit Tests
+To run tests, run `npm run test:unit`
