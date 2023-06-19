@@ -6,7 +6,8 @@
       "dom",
       "es2015.promise"
     ],
-    "module": "commonjs",
+    "module": "es2020",
+    "moduleResolution": "node",
     "baseUrl": "./",
     "types": [
       "cypress",

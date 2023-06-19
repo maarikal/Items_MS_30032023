@@ -1,7 +1,7 @@
 <script>
 export default {
   created() {
-    //this.$router.push('/items')
+    console.log("Intro.vue created");
   }
 }
 </script>
