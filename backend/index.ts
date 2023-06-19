@@ -7,7 +7,7 @@ import usersRoutes from "./routes/usersRoutes";
 import itemsRoutes from "./routes/itemsRoutes";
 import cors from 'cors';
 import sessionsRoute from "./routes/sessionsRoute";
-import bodyParser from "body-parser";
+import bodyParser, {xml} from "body-parser";
 
 import bodyParserXml from "body-parser-xml";
 import logsRoute from "./routes/logsRoute";
@@ -74,18 +74,47 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     // if content-type is xml, remove the outer object from the body
-    if (req.headers["content-type"] === "application/xml" || req.headers["content-type"] === "text/xml") {
-        const data = req.body.root;
-        const {name, description, image} = data;
-        // Extract the data from the root object
-        req.body = {
-            name: name[0],
-            description: description[0],
-            image: image[0],
+    // Hardcoded version (worked with items)
+    /*    if (req.headers["content-type"] === "application/xml" || req.headers["content-type"] === "text/xml") {
+            const data = req.body.root;
+            const {name, description, image} = data;
+            // Extract the data from the root object
+            req.body = {
+                name: name[0],
+                description: description[0],
+                image: image[0],
+            }*/
+    const oldSend = res.send;
+
+    // @ts-ignore
+    res.send = (body) => {
+        if (req.accepts('application/json')) {
+            res.header('Content-Type', 'application/json');
+            oldSend.call(res, body);
+        } else if (req.accepts('application/xml')) {
+            res.header('Content-Type', 'application/xml');
+            let xmlBody = typeof body === 'string' ? body : xml(convertToXMLFormat(body));
+            oldSend.call(res, xmlBody);
+        } else {
+            res.status(415).send('Unsupported media type');
         }
-    }
+    };
     next();
 });
+
+// Convert JS Object to XML format
+// @ts-ignore
+function convertToXMLFormat(obj: Record<string, any>): Record<string, any> {
+    const result: Record<string, any> = {};
+    Object.keys(obj).forEach(key => {
+        if (typeof obj[key] === 'object') {
+            result[key] = convertToXMLFormat(obj[key]);
+        } else {
+            result[key] = obj[key];
+        }
+    });
+    return result;
+}
 
 // Routes
 app.use('/users', usersRoutes);
