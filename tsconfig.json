@@ -23,6 +23,7 @@
   },
   "include": [
     "**/*.ts",
-    "vue-shim.d.ts"
+    "vue-shim.d.ts",
+    "../backend/functions.ts"
   ]
 }

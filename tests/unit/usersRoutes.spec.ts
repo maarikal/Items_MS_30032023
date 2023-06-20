@@ -74,7 +74,9 @@ describe('usersRoutes', () => {
         if (createUserRoute) {
             await createUserRoute.route?.stack[0].handle(mockRequest, mockResponse, mockNext);
         }
-        
+
+        await new Promise(resolve => setTimeout(resolve, 100)); // Add a small delay to allow the database to update
+
         expect(mockResponse.status).toHaveBeenCalledWith(201);
         
         mockResponse.body = {
@@ -84,5 +86,6 @@ describe('usersRoutes', () => {
         }
         console.log('Mock Response:', mockResponse.body);
         expect(mockResponse.send).toHaveBeenCalledWith(mockResponse.body);
+
     });
 });

@@ -117,6 +117,7 @@
     /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "backend/functions.ts"
   ]
 }
