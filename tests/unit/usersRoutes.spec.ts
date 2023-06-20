@@ -1,3 +1,5 @@
+// https://www.prisma.io/docs/guides/testing/unit-testing
+
 // @ts-ignore
 import { Request, Response, NextFunction } from 'express';
 import { handleErrors } from '../../backend/routes/handleErrors';
@@ -63,29 +65,49 @@ describe('usersRoutes', () => {
 
         mockRequest.body = {
             email: randomEmail,
-            password: 'qwerty1234'
+            password: 'hashedPassword'
         }
-        
-        const createUserRoute = usersRoutes.stack.find(
-            (layer: any) => layer.route?.path === '/'
+
+        // Mock the PrismaClient
+        const prisma = new PrismaClient();
+        prisma.user.create = jest.fn().mockResolvedValue({
+            data: {
+                email: randomEmail,
+                id: 1,
+                password: 'hashedPassword'
+            }
+        });
+
+
+        // Mock bcrypt
+        bcrypt.hash = jest.fn().mockResolvedValue('hashedPassword');
+
+        // Mock the handler function
+        const handler = handleErrors(
+            usersRoutes.stack.find(
+                (layer: any) => layer.route?.path === '/'
+            )?.route?.stack[0].handle
         );
 
-        console.log('Create User Route:', createUserRoute);
-        if (createUserRoute) {
-            await createUserRoute.route?.stack[0].handle(mockRequest, mockResponse, mockNext);
-        }
+        // Call the handler function
+        await handler(mockRequest, mockResponse, mockNext);
 
-        await new Promise(resolve => setTimeout(resolve, 100)); // Add a small delay to allow the database to update
+        // Check that the user was created
+        expect(prisma.user.create).toHaveBeenCalledWith({
+                data: {
+                    email: randomEmail,
+                    id: 1
+                }
+            }
+        );
 
+        // Check that the response was sent
         expect(mockResponse.status).toHaveBeenCalledWith(201);
-        
-        mockResponse.body = {
-            // id: integer,
-            id: expect.any(Number),
-            email: randomEmail,
-        }
-        console.log('Mock Response:', mockResponse.body);
-        expect(mockResponse.send).toHaveBeenCalledWith(mockResponse.body);
-
+        expect(mockResponse.send).toHaveBeenCalledWith({
+                id: 1,
+                email: randomEmail,
+            }
+        );
     });
+
 });
