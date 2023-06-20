@@ -61,8 +61,8 @@ export const sendResponse = async (req: IRequestWithSession, res: Response, data
         acceptHeader.includes('text/xml') ||
         acceptHeader.includes('application/xhtml+xml')
     ) {
-        const data = req.body;
-        const xmlBuilder = new xml2js.Builder({rootName: 'root'})
+        const data = req.body.root;
+        const xmlBuilder = new xml2js.Builder({rootName: 'root'});
         const xmlData = xmlBuilder.buildObject({data});
         /*            items: {
                         name: data.name,

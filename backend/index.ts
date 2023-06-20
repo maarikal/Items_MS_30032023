@@ -106,11 +106,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     };
     next();
 });
-
 // Convert JS Object to XML format
 // @ts-ignore
-// Convert JS Object to XML format
-function convertToXMLFormat(obj) {
+function convertToXMLFormat(obj: any) {
     return Object.keys(obj).map(key => {
         if (typeof obj[key] === 'object') {
             return {[key]: convertToXMLFormat(obj[key])};

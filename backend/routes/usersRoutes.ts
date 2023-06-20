@@ -109,7 +109,7 @@ async function verifyEmail(email: string): Promise<any> {
     });
 }
 
-function tryToParseJson(jsonString: string): any {
+export function tryToParseJson(jsonString: string): any {
     try {
         let o = JSON.parse(jsonString);
         if (o && typeof o === 'object') {

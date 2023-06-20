@@ -5,6 +5,7 @@ import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
 import authorizeRequest, {sendResponse} from "../functions";
+import {tryToParseJson} from "./usersRoutes";
 
 const prisma = new PrismaClient();
 const router = express.Router();
