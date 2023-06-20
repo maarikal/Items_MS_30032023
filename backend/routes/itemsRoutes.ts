@@ -4,12 +4,10 @@ import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import authorizeRequest, {sendResponse} from "../functions";
+import authorizeRequest, {parseRequestData, sendResponse} from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
-
-let data;
 
 // Routes
 router.get(
@@ -27,19 +25,8 @@ router.post(
     '/',
     authorizeRequest,
     handleErrors(async (req: IRequestWithSession, res: Response) => {
-        const acceptHeader = req.headers["content-type"] || '';
+        const data = parseRequestData(req)
 
-        if (acceptHeader === 'application/json') {
-            data = req.body;
-        } else if (
-            acceptHeader.includes('application/xml') ||
-            acceptHeader.includes('text/xml') ||
-            acceptHeader.includes('application/xhtml+xml')) {
-            data = req.body.root;
-        } else {
-            // Handle unsupported content types or return an error response
-            return sendResponse(req, res, {error: 'Unsupported content type'}, 400);
-        }
         // Save item to database using Prisma
         const {name, description, image} = data;
         console.log("post req body:", req.body)
@@ -72,7 +59,6 @@ router.post(
                         item: item,
                     })));
         // return item
-        console.log('sendResponse:', item)
         return sendResponse(req, res, item, 201)
     }));
 
@@ -82,19 +68,8 @@ router.patch(
     '/',
     authorizeRequest,
     handleErrors(async (req: Request, res: Response) => {
-        const acceptHeader = req.headers["content-type"] || '';
+        const data = parseRequestData(req)
 
-        if (acceptHeader === 'application/json') {
-            data = req.body;
-        } else if (
-            acceptHeader.includes('application/xml') ||
-            acceptHeader.includes('text/xml') ||
-            acceptHeader.includes('application/xhtml+xml')) {
-            data = req.body.root;
-        } else {
-            // Handle unsupported content types or return an error response
-            return sendResponse(req, res, {error: 'Unsupported content type'}, 400);
-        }
         // Update item in database using Prisma
         const {name, description, image} = data
         console.log('patch: ', req.body)

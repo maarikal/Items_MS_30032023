@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
 import {v4 as uuid} from 'uuid';
 import logger from "../logger";
-import authorizeRequest from '../functions';
+import authorizeRequest, {parseRequestData} from '../functions';
 import {IRequestWithSession} from "../function.d";
 
 const prisma = new PrismaClient();
@@ -14,20 +14,7 @@ const router = express.Router();
 router.post(
     '/',
     handleErrors(async (req: IRequestWithSession, res: Response) => {
-        let data;
-        const acceptHeader = req.headers["content-type"] || '';
-        if (acceptHeader === 'application/json') {
-            data = req.body;
-        } else if (
-            acceptHeader.includes('application/xml') ||
-            acceptHeader.includes('text/xml') ||
-            acceptHeader.includes('application/xhtml+xml')) {
-            data = req.body.root;
-        } else {
-            // Handle unsupported content types or return an error response
-            return res.status(400).send({error: 'Unsupported content type'});
-        }
-        console.log("post req body:", data)
+        const data = parseRequestData(req)
 
         // Validate that user email and password exist (3a)
         if (!data.email) {

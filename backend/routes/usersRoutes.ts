@@ -3,15 +3,13 @@ import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
 import logger from "../logger";
-import {sendResponse} from "../functions";
+import {parseRequestData, sendResponse} from "../functions";
 
 const verifier = require('@gradeup/email-verify');
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-// define data
-let data: any;
 
 // Routes
 router.post(
@@ -26,6 +24,7 @@ router.post(
     '/',
     requireValidEmail,
     handleErrors(async (req: Request, res: Response) => {
+        const data = parseRequestData(req)
         // Validate password
         if (!data.password) {
             return res.status(401).send({error: 'Password is required'});
@@ -72,18 +71,7 @@ async function requireValidEmail(
     res: Response,
     next: NextFunction
 ) {
-    const acceptHeader = req.headers["content-type"] || '';
-    if (acceptHeader === 'application/json') {
-        data = req.body;
-    } else if (
-        acceptHeader.includes('application/xml') ||
-        acceptHeader.includes('text/xml') ||
-        acceptHeader.includes('application/xhtml+xml')) {
-        data = req.body.root;
-    } else {
-        // Handle unsupported content types or return an error response
-        return res.status(400).send({error: 'Unsupported content type'});
-    }
+    const data = parseRequestData(req)
 
     // Validate email
     if (!data.email) {
