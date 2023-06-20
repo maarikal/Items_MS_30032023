@@ -55,6 +55,7 @@ router.post(
         logger.info('User created', {user});
 
         // Return user
+        console.log('Handler function for create user route called with user: ', userCopy);
         return res.status(201).send(userCopy);
     })
 );
