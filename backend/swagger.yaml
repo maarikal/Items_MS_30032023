@@ -103,6 +103,16 @@ paths:
                 Item returned:
                   value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n\t<name>item nr 1</name>\r\n\t<description>it is green and small</description>\r\n\t<image>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBY9h14uKCSgCxNCZEhClbX2ksq2Fi6iCmQ&amp;usqp=CAU</image>\r\n</root>"
           description: Return item
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unsupported content type:
+                  value:
+                    error: Unsupported content type
+          description: Unsupported content type
         '401':
           content:
             application/json:
@@ -194,6 +204,9 @@ paths:
                 Bad Request:
                   value:
                     error: Bad Request
+                Unsupported content type:
+                  value:
+                    error: Unsupported content type
           description: Bad request
         '401':
           content:
@@ -281,6 +294,9 @@ paths:
                 Bad Request:
                   value:
                     error: Bad Request
+                Unsupported content type:
+                  value:
+                    error: Unsupported content type
           description: Bad Request
         '401':
           content:
@@ -520,6 +536,16 @@ paths:
                 Item created:
                   value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<root>\r\n    <id></id>\r\n    <description>some text</description>\r\n    <image>returned item image</image>\r\n    <name>returned item name</name>\r\n</root>"
           description: Item created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unsupported content type:
+                  value:
+                    error: Unsupported content type
+          description: Unsupported content type
         '401':
           content:
             application/json:

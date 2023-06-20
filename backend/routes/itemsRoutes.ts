@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import authorizeRequest, {sendResponse} from "../functions";
+import authorizeRequest, {parseRequestData, sendResponse} from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -16,8 +16,6 @@ router.get(
     handleErrors(async (req: IRequestWithSession, res: Response) => {
         // Get all items from database using Prisma
         const items = await prisma.item.findMany();
-        // Return items
-        //return sendResponse(req, res, 'items', 201)
         return res.status(201).send(items);
     }),
 );
@@ -27,8 +25,10 @@ router.post(
     '/',
     authorizeRequest,
     handleErrors(async (req: IRequestWithSession, res: Response) => {
+        const data = parseRequestData(req)
+
         // Save item to database using Prisma
-        const {name, description, image} = req.body;
+        const {name, description, image} = data;
         console.log("post req body:", req.body)
         const item = await prisma.item.create({
             data: {
@@ -59,7 +59,6 @@ router.post(
                         item: item,
                     })));
         // return item
-        console.log('sendResponse:', item)
         return sendResponse(req, res, item, 201)
     }));
 
@@ -69,8 +68,10 @@ router.patch(
     '/',
     authorizeRequest,
     handleErrors(async (req: Request, res: Response) => {
+        const data = parseRequestData(req)
+
         // Update item in database using Prisma
-        const {name, description, image} = req.body
+        const {name, description, image} = data
         console.log('patch: ', req.body)
         const item = await prisma.item.update({
             where: {

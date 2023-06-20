@@ -61,19 +61,28 @@ export const sendResponse = async (req: IRequestWithSession, res: Response, data
         acceptHeader.includes('text/xml') ||
         acceptHeader.includes('application/xhtml+xml')
     ) {
-        const data = req.body
-        const xmlBuilder = new xml2js.Builder({rootName: 'root'})
-        const xmlData = xmlBuilder.buildObject({
-            items: {
-                name: data.name,
-                description: data.description,
-                image: data.image,
-            }
-        });
+        const data = req.body.root;
+        const xmlBuilder = new xml2js.Builder({rootName: 'root'});
+        const xmlData = xmlBuilder.buildObject({data});
         res.set('Content-Type', 'application/xml');
         return res.status(201).send(xmlData);
     } else {
         return res.status(406).send('Not Acceptable');
+    }
+}
+
+export function parseRequestData(req: any) {
+    const acceptHeader = req.headers['content-type'] || '';
+    if (acceptHeader === 'application/json') {
+        return req.body;
+    } else if (
+        acceptHeader.includes('application/xml') ||
+        acceptHeader.includes('text/xml') ||
+        acceptHeader.includes('application/xhtml+xml')
+    ) {
+        return req.body.root;
+    } else {
+        throw new Error('Unsupported content type');
     }
 }
 
