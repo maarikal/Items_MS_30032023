@@ -14,18 +14,33 @@ const router = express.Router();
 router.post(
     '/',
     handleErrors(async (req: IRequestWithSession, res: Response) => {
+        let data;
+        const acceptHeader = req.headers["content-type"] || '';
+        if (acceptHeader === 'application/json') {
+            data = req.body;
+        } else if (
+            acceptHeader.includes('application/xml') ||
+            acceptHeader.includes('text/xml') ||
+            acceptHeader.includes('application/xhtml+xml')) {
+            data = req.body.root;
+        } else {
+            // Handle unsupported content types or return an error response
+            return res.status(400).send({error: 'Unsupported content type'});
+        }
+        console.log("post req body:", data)
+
         // Validate that user email and password exist (3a)
-        if (!req.body.email) {
+        if (!data.email) {
             return res.status(401).send({error: 'Email is required'});
         }
 
-        if (!req.body.password) {
+        if (!data.password) {
             return res.status(401).send({error: 'Password is required'});
         }
 
         // Find the user by email from database (3b)
         const userEmail = await prisma.user.findUnique({
-            where: {email: req.body.email},
+            where: {email: data.email},
         });
         // Check that the user email is correct
         if (!userEmail) {
@@ -34,7 +49,7 @@ router.post(
 
         // Check that the user password matches with database password (3c)
         const userPassword = await bcrypt.compare(
-            req.body.password,
+            data.password,
             userEmail?.password || ''
         );
 
