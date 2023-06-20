@@ -8,6 +8,7 @@ import itemsRoutes from "./routes/itemsRoutes";
 import cors from 'cors';
 import sessionsRoute from "./routes/sessionsRoute";
 import bodyParser, {xml} from "body-parser";
+import xmlparser from "express-xml-bodyparser";
 
 import bodyParserXml from "body-parser-xml";
 import logsRoute from "./routes/logsRoute";
@@ -17,8 +18,12 @@ dotenv.config();
 const port: number = Number(process.env.PORT) || 3000;
 const app: Express = express();
 const swaggerDocument: Object = YAML.load('./swagger.yaml');
+//const xmlparser = require('express-xml-bodyparser');
 
-bodyParserXml(bodyParser); // register xml parser
+// bodyParserXml(bodyParser); // register xml parser
+app.use(xmlparser({
+    explicitArray: false, // This will set array to false
+}));
 
 app.use(cors());
 
@@ -67,8 +72,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 // Middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true})); // use url-encoded middleware
-app.use(bodyParser.xml())
+// app.use(bodyParser.urlencoded({extended: true})); // use url-encoded middleware
+//app.use(bodyParser.xml())
 app.use(express.static('public'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -91,8 +96,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
         if (req.accepts('application/json')) {
             res.header('Content-Type', 'application/json');
             oldSend.call(res, body);
-        } else if (req.accepts('application/xml')) {
-            res.header('Content-Type', 'application/xml');
+        } else if (req.accepts('application/xml' || 'text/xml')) {
+            res.header('Content-Type', 'text/xml');
             let xmlBody = typeof body === 'string' ? body : xml(convertToXMLFormat(body));
             oldSend.call(res, xmlBody);
         } else {
@@ -104,16 +109,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Convert JS Object to XML format
 // @ts-ignore
-function convertToXMLFormat(obj: Record<string, any>): Record<string, any> {
-    const result: Record<string, any> = {};
-    Object.keys(obj).forEach(key => {
+// Convert JS Object to XML format
+function convertToXMLFormat(obj) {
+    return Object.keys(obj).map(key => {
         if (typeof obj[key] === 'object') {
-            result[key] = convertToXMLFormat(obj[key]);
+            return {[key]: convertToXMLFormat(obj[key])};
         } else {
-            result[key] = obj[key];
+            return {[key]: obj[key]};
         }
     });
-    return result;
 }
 
 // Routes

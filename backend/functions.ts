@@ -61,15 +61,15 @@ export const sendResponse = async (req: IRequestWithSession, res: Response, data
         acceptHeader.includes('text/xml') ||
         acceptHeader.includes('application/xhtml+xml')
     ) {
-        const data = req.body
+        const data = req.body;
         const xmlBuilder = new xml2js.Builder({rootName: 'root'})
-        const xmlData = xmlBuilder.buildObject({
-            items: {
-                name: data.name,
-                description: data.description,
-                image: data.image,
-            }
-        });
+        const xmlData = xmlBuilder.buildObject({data});
+        /*            items: {
+                        name: data.name,
+                        description: data.description,
+                        image: data.image,
+                    }*/
+
         res.set('Content-Type', 'application/xml');
         return res.status(201).send(xmlData);
     } else {
