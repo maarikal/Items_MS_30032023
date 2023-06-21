@@ -25,4 +25,6 @@ module.exports = {
         ],
         '^.+\\.vue$': 'vue-jest',
     },
+    setupFilesAfterEnv: ['<rootDir>/tests/unit/prismaMock/singleton.ts'],
+    testEnvironment: 'node',
 }

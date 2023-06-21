@@ -22,6 +22,7 @@ router.post(
     '/',
     requireValidEmail,
     handleErrors(async (req: Request, res: Response) => {
+        console.log('Handler function for create user route called with body: ', req.body);
         // Validate password
         if (!req.body.password) {
             return res.status(401).send({error: 'Password is required'});
