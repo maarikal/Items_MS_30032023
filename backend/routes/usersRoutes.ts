@@ -57,12 +57,12 @@ router.post(
 
         // Return user
         console.log('Handler function for create user route called with user: ', userCopy);
-        return res.status(201).send(userCopy);
+        return res.status(201).send({userCopy});
     })
 );
 
 // Middleware
-async function requireValidEmail(
+export async function requireValidEmail(
     req: Request,
     res: Response,
     next: NextFunction
