@@ -3,7 +3,7 @@ import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
 import logger from "../logger";
-import {parseRequestData, sendResponse} from "../functions";
+import {parseRequestData} from "../functions";
 
 const verifier = require('@gradeup/email-verify');
 
@@ -60,8 +60,8 @@ router.post(
         // Log user creation
         logger.info('User created', {user});
 
-        // Return user and use sendResponse function
-        return sendResponse(req, res, userCopy, 201);
+        // Return user
+        return res.status(201).send(userCopy);
     })
 );
 

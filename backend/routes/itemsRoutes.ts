@@ -4,7 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import logger from "../logger";
 import {expressWs} from "../index";
 import {IRequestWithSession} from "../function";
-import authorizeRequest, {parseRequestData, sendResponse} from "../functions";
+import authorizeRequest, {parseRequestData} from "../functions";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -59,7 +59,8 @@ router.post(
                         item: item,
                     })));
         // return item
-        return sendResponse(req, res, item, 201)
+        return res.status(201).send(item);
+        //return sendResponse(req, res, item, 201)
     }));
 
 
@@ -99,7 +100,7 @@ router.patch(
                     )
                 );
             // Return item
-        return sendResponse(req, res, item, 201)
+        return res.status(201).send(item);
         }
     ));
 

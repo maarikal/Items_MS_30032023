@@ -51,7 +51,7 @@ async function authorizeRequest(req: IRequestWithSession, res: Response, next: N
     next()
 }
 
-export const sendResponse = async (req: IRequestWithSession, res: Response, data: any, status: number) => {
+/*export const sendResponse = async (req: IRequestWithSession, res: Response, data: any, status: number) => {
     const acceptHeader = req.headers["content-type"] || '';
     console.log("acceptHeader: ", acceptHeader)
     if (acceptHeader === 'application/json') {
@@ -69,7 +69,7 @@ export const sendResponse = async (req: IRequestWithSession, res: Response, data
     } else {
         return res.status(406).send('Not Acceptable');
     }
-}
+}*/
 
 export function parseRequestData(req: any) {
     const acceptHeader = req.headers['content-type'] || '';
