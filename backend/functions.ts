@@ -1,6 +1,6 @@
 import {NextFunction, Response} from "express";
 import {PrismaClient} from '@prisma/client';
-import {IRequestWithSession} from 'function';
+import {IRequestWithSession} from './function';
 import xml2js from 'xml2js';
 
 

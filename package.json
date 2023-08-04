@@ -32,6 +32,7 @@
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "prisma": "^4.15.0",
+    "supertest": "^6.3.3",
     "vue-router": "^4.2.2",
     "xml-js": "^1.6.11",
     "xml2js": "^0.6.0"

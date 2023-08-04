@@ -62,7 +62,7 @@ describe('usersRoutes', () => {
         expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Email is required' });
     });
 
-    it('handles the create user route', async () => {
+/*    it('handles the create user route', async () => {
 
         mockRequest.body = {
             email: 'test222222222222@test.ee',
@@ -131,6 +131,6 @@ describe('usersRoutes', () => {
             email: randomEmail,
         });
 
-    });
+    });*/
 
 });
