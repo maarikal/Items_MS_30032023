@@ -27,4 +27,5 @@ module.exports = {
     },
     setupFilesAfterEnv: ['<rootDir>/tests/unit/prismaMock/singleton.ts'],
     testEnvironment: 'node',
+    setupFiles: ['./tests/unit/setup.js'],
 }

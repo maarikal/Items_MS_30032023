@@ -13,10 +13,16 @@ import bodyParserXml from "body-parser-xml";
 import logsRoute from "./routes/logsRoute";
 import oAuth2LoginRoute from "./routes/oAuth2LoginRoute";
 
+import path from 'path';
+
 dotenv.config();
 const port: number = Number(process.env.PORT) || 3000;
 const app: Express = express();
-const swaggerDocument: Object = YAML.load('./swagger.yaml');
+//const swaggerDocument: Object = YAML.load('./swagger.yaml');
+
+// Construct an absolute path to the swagger.yaml file
+const swaggerPath = path.join(__dirname, '..', 'backend', 'swagger.yaml');
+const swaggerDocument: Object = YAML.load(swaggerPath);
 
 bodyParserXml(bodyParser); // register xml parser
 
@@ -26,9 +32,13 @@ app.use(cors());
 import https from 'https';
 import fs from 'fs';
 
+// Construct absolute paths to key.pem and cert.pem in the root directory
+const keyPath = path.join(__dirname, '..', 'key.pem'); // Go up one level to the root directory
+const certPath = path.join(__dirname, '..', 'cert.pem'); // Go up one level to the root directory
+
 const options = {
-    key: fs.readFileSync('../key.pem'),
-    cert: fs.readFileSync('../cert.pem')
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath)
 };
 
 const httpsServer = https.createServer(options, app).listen(port, () => {
