@@ -14,3 +14,5 @@ declare module 'bcrypt';
 // Try `npm i --save-dev @types/prisma__client` if it exists or add a new declaration
 // (.d.ts) file containing `declare module '@prisma/client';`
 declare module '@prisma/client';
+
+declare module 'supertest';

@@ -7,9 +7,6 @@ import itemsRoutes from '../../backend/routes/itemsRoutes';
 import { handleErrors } from '../../backend/routes/handleErrors';
 import { expect } from "@jest/globals";
 
-// Mock yaml file
-jest.mock('./__mocks__/yaml');
-
 describe('itemsRoutes', () => {
 
     const prisma = new PrismaClient();
